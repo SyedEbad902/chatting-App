@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => FirebaseAuthService()),
           ChangeNotifierProvider(create: (_) => ValidationProvider()),
           ChangeNotifierProvider(create: (_) => ImagePickerService()),
+          // ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
         ],
         child: const MaterialApp(
           debugShowCheckedModeBanner: false,

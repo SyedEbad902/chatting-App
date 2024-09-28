@@ -1,10 +1,7 @@
-import 'package:chatapp/Screens/chat_screen.dart';
 import 'package:chatapp/Screens/signup_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -168,15 +165,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: MediaQuery.of(context).size.width * 0.85,
                       child: ElevatedButton(
                         onPressed: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
+                          // SharedPreferences prefs =
+                          //     await SharedPreferences.getInstance();
                           // await prefs.setBool('isLoggedIn', true);
                           // print(number);
                          authProvider.signinUser(
                               emailController.text, passwordController.text,context);
-                          print(emailController.text);
-                          print(passwordController.text);
-                          print('hello');
+                          // print(emailController.text);
+                          // print(passwordController.text);
+                          // print('hello');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,

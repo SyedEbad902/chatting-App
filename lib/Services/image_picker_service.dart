@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:chatapp/Screens/chat_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delightful_toast/delight_toast.dart';
@@ -39,7 +38,7 @@ class ImagePickerService extends ChangeNotifier {
       final imageUrl = await ref.getDownloadURL();
 
       // Save the download URL, image name, and user UID to Firestore
-      await _firestore.collection('users').add({
+      await _firestore.collection('users').doc('$uid').set({
         'uid': uid,
         'imageUrl': imageUrl,
         'imageName': userName,
@@ -49,7 +48,7 @@ class ImagePickerService extends ChangeNotifier {
       isloading = false;
       notifyListeners();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MessageScreen()));
+          context, MaterialPageRoute(builder: (context) => const MessageScreen()));
       DelightToast(
               text: "Your profile hs been setup successfully",
               icon: Icons.done,
@@ -92,7 +91,7 @@ class ImagePickerService extends ChangeNotifier {
       final imageUrl = await ref.getDownloadURL();
 
       // Save the download URL, image name, and user UID to Firestore
-      await _firestore.collection('users').add({
+      await _firestore.collection('users').doc('$uid').set({
         'uid': uid,
         'imageUrl': imageUrl,
         'imageName': userName,
@@ -102,7 +101,7 @@ class ImagePickerService extends ChangeNotifier {
       isloading = false;
       notifyListeners();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MessageScreen()));
+          context, MaterialPageRoute(builder: (context) => const MessageScreen()));
     } catch (e) {
       print('Error uploading image: $e');
     }
@@ -143,7 +142,7 @@ class ImagePickerService extends ChangeNotifier {
         ),
         title: Text(
           text,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 14,
           ),

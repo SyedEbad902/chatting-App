@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:chatapp/Screens/login_screen.dart';
-import 'package:chatapp/Screens/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,14 +22,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 1), () async {
-      bool isLoggedIn = false;
-      // await whereToGo();
+      // bool isLoggedIn =  await whereToGo();
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   // isLoggedIn ? MessageScreen() :
-                LoginScreen()));
+                const LoginScreen()));
     });
   }
 

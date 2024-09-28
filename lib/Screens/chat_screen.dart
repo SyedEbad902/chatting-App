@@ -1,4 +1,9 @@
+import 'package:chatapp/Services/auth_service.dart';
+import 'package:chatapp/Services/database_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({super.key});
@@ -10,10 +15,11 @@ class MessageScreen extends StatefulWidget {
 class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
+    // final databaseProvider = Provider.of<DatabaseServiceProvider>(context);
+    final authProvider = Provider.of<FirebaseAuthService>(context);
     return Scaffold(
         backgroundColor: const Color(0xff414A4C),
         body: Stack(children: [
-          
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
               // decoration: BoxDecoration(border: Border(bottom: Bo)),
@@ -27,17 +33,32 @@ class _MessageScreenState extends State<MessageScreen> {
                 Padding(
                   padding: EdgeInsets.only(
                       left: MediaQuery.of(context).size.width * 0.05,
+                      right: MediaQuery.of(context).size.width * 0.05,
                       top: MediaQuery.of(context).size.height * 0.07),
-                  child: const Text(
-                    "Welcome Ebad!",
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Welcome Ebad!",
+                        style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white),
+                      ),
+                      GestureDetector(
+                          onTap: () {
+                            authProvider.signOut(context);
+                          },
+                          child: const Icon(
+                            Icons.logout_outlined,
+                            size: 25,
+                            color: Colors.white,
+                          )),
+                    ],
                   ),
                 )
               ])),
-
           DraggableScrollableSheet(
               initialChildSize: 0.8, // 30% of the screen height
               minChildSize:
@@ -56,54 +77,81 @@ class _MessageScreenState extends State<MessageScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) {
-                          return const Divider(
-                            color: Color.fromARGB(255, 224, 223, 223),
-                            indent: 10,
-                            endIndent: 10,
-                          );
-                        },
-                        controller: scrollController,
-                        itemCount: 20,
-                        itemBuilder: (BuildContext context, int index) {
-                          return const ListTile(
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: AssetImage(
-                                'assets/images/user1.png',
-                                // height: 50,
-                                // width: 50,
-                              ),
-                            ),
-                            title: Text(
-                              "Syed Ebad",
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              "oky sure",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w400),
-                            ),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "12:55",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Icon(
-                                  Icons.done_all,
-                                  size: 17,
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                      child: StreamBuilder(
+                          stream: authProvider.getUserProfiles(),
+                          builder: (context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            }
+
+                            if (!snapshot.hasData ||
+                                snapshot.data!.docs.isEmpty) {
+                              return const Center(child: Text('No profiles found.'));
+                            }
+
+                            // Get the list of profiles excluding the current user
+                            List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                                userProfiles = snapshot.data!.docs;
+                            print(userProfiles);
+                            return ListView.separated(
+                              separatorBuilder: (context, index) {
+                                return const Divider(
+                                  color: Color.fromARGB(255, 224, 223, 223),
+                                  indent: 10,
+                                  endIndent: 10,
+                                );
+                              },
+                              controller: scrollController,
+                              itemCount: userProfiles.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: NetworkImage(
+                                        userProfiles[index]["imageUrl"]
+
+                                        // 'assets/images/user1.png',
+                                        // height: 50,
+                                        // width: 50,
+                                        ),
+                                  ),
+                                  title: Text(
+                                    userProfiles[index]["imageName"],
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: const Text(
+                                    "oky sure",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  trailing: const Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "12:55",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Icon(
+                                        Icons.done_all,
+                                        size: 17,
+                                      )
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }),
                     )
                     //  Column(
                     //   children: [

@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final imageProvider = Provider.of<ImagePickerService>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color.fromRGBO(20, 20, 20, 1),
+        backgroundColor: const Color.fromRGBO(20, 20, 20, 1),
         body: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       // left: 20,
                                       bottom: 30,
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       "Setting Up Your Profile",
                                       style: TextStyle(
                                           color: Colors.white,
@@ -59,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Center(
+                                  const Center(
                                     child: CircularProgressIndicator(),
                                   )
                                 ])
@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       // left: 20,
                                       bottom: 30,
                                     ),
-                                    child: Text(
+                                    child: const Text(
                                       "Setup Your Profile",
                                       style: TextStyle(
                                           color: Colors.white,
@@ -98,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       radius: 65,
                                       backgroundImage: selectedImage != null
                                           ? FileImage(selectedImage!)
-                                          : AssetImage(
+                                          : const AssetImage(
                                               'assets/images/placeholder.png'),
                                     ),
                                   ),
@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         color: Colors.white),
                                     child: TextField(
                                       controller: nameController,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           border: InputBorder
                                               .none, // Removes the bottom line
                                           hintText: 'Enter your name',
@@ -143,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               fontSize: 16)),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   SizedBox(
@@ -182,7 +182,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ),
-                                ]))
-                ])));
+                                ]
+                                )
+                                )
+                ]
+                )
+                )
+                );
   }
 }

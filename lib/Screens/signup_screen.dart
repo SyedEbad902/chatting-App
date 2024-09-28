@@ -1,7 +1,4 @@
-import 'package:chatapp/Screens/login_screen.dart';
-import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/validation_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -41,6 +41,13 @@ dependencies:
   firebase_auth: ^5.3.1
   flutter_verification_code: ^1.1.7
   shared_preferences: ^2.3.2
+  provider: ^6.1.2
+  image_picker: ^1.1.2
+  path: ^1.9.0
+  dash_chat_2: ^0.0.21
+  delightful_toast: ^1.1.0
+  firebase_storage: ^12.3.2
+  cloud_firestore: ^5.4.3
 
 dev_dependencies:
   flutter_test:

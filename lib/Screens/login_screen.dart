@@ -1,7 +1,9 @@
 import 'package:chatapp/Screens/chat_screen.dart';
 import 'package:chatapp/Screens/signup_screen.dart';
+import 'package:chatapp/Services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,20 +14,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  signinUser(String emailAddress, String password) async {
-    try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password);
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MessageScreen()));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    }
-  }
+  // signinUser(String emailAddress, String password) async {
+  //   try {
+  //     final credential = await FirebaseAuth.instance
+  //         .signInWithEmailAndPassword(email: emailAddress, password: password);
+  //     Navigator.push(context,
+  //         MaterialPageRoute(builder: (context) => const MessageScreen()));
+  //   } on FirebaseAuthException catch (e) {
+  //     if (e.code == 'user-not-found') {
+  //       print('No user found for that email.');
+  //     } else if (e.code == 'wrong-password') {
+  //       print('Wrong password provided for that user.');
+  //     }
+  //   }
+  // }
 
   // String? code = '+92';
   TextEditingController emailController = TextEditingController();
@@ -33,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<FirebaseAuthService>(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 20, 20),
       body: SingleChildScrollView(
@@ -82,8 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: EdgeInsets.only(left: 15, bottom: 8),
-                            child: Text(
+                            padding: const EdgeInsets.only(left: 15, bottom: 8),
+                            child: const Text(
                               "Email",
                               style: TextStyle(
                                   color: Colors.white,
@@ -124,8 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            padding: EdgeInsets.only(left: 15, bottom: 8),
-                            child: Text(
+                            padding: const EdgeInsets.only(left: 15, bottom: 8),
+                            child: const Text(
                               "Password",
                               style: TextStyle(
                                   color: Colors.white,
@@ -167,10 +170,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () async {
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
-                          await prefs.setBool('isLoggedIn', true);
+                          // await prefs.setBool('isLoggedIn', true);
                           // print(number);
-                          signinUser(
-                              emailController.text, passwordController.text);
+                         authProvider.signinUser(
+                              emailController.text, passwordController.text,context);
                           print(emailController.text);
                           print(passwordController.text);
                           print('hello');
@@ -188,11 +191,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    Expanded(child: SizedBox()),
+                    const Expanded(child: SizedBox()),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Dont have an account?  ",
                           style: TextStyle(
                               fontSize: 15,
@@ -204,9 +207,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SignupScreen()));
+                                      builder: (context) =>
+                                          const SignupScreen()));
                             },
-                            child: Text("Sign Up",
+                            child: const Text("Sign Up",
                                 style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.white,

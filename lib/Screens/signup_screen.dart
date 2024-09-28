@@ -1,6 +1,9 @@
 import 'package:chatapp/Screens/login_screen.dart';
+import 'package:chatapp/Services/auth_service.dart';
+import 'package:chatapp/Services/validation_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -10,103 +13,105 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  createUser(String email, String password) async {
-    try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signup Successful')),
-      );
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  // createUser(String email, String password) async {
+  //   try {
+  //     final credential =
+  //         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //       email: email,
+  //       password: password,
+  //     );
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Signup Successful')),
+  //     );
+  //     Navigator.push(
+  //         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+  //   } on FirebaseAuthException catch (e) {
+  //     if (e.code == 'weak-password') {
+  //       print('The password provided is too weak.');
+  //     } else if (e.code == 'email-already-in-use') {
+  //       print('The account already exists for that email.');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   final _formKey = GlobalKey<FormState>();
 
   // Controllers to get the text field values
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
+  // final _emailController = TextEditingController();
+  // final _passwordController = TextEditingController();
+  // final _confirmPasswordController = TextEditingController();
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email';
-    }
-    // Simple email validation pattern
-    String pattern = r'^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+.[a-zA-Z]{2,4}$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value)) {
-      return 'Enter a valid email address';
-    }
-    return null;
-  }
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please enter your email';
+  //   }
+  //   // Simple email validation pattern
+  //   String pattern = r'^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+.[a-zA-Z]{2,4}$';
+  //   RegExp regex = RegExp(pattern);
+  //   if (!regex.hasMatch(value)) {
+  //     return 'Enter a valid email address';
+  //   }
+  //   return null;
+  // }
 
-  // Helper function to validate password strength
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter a password';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
-    }
-    return null;
-  }
+  // // Helper function to validate password strength
+  // String? _validatePassword(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Please enter a password';
+  //   }
+  //   if (value.length < 6) {
+  //     return 'Password must be at least 6 characters';
+  //   }
+  //   return null;
+  // }
 
-  // Helper function to confirm password match
-  String? _validateConfirmPassword(String password, String confirmPassword) {
-    if (confirmPassword.isEmpty) {
-      return 'Please confirm your password';
-    } else if (password != confirmPassword) {
-      return 'Passwords do not match';
-    }
-    return null;
-  }
+  // // Helper function to confirm password match
+  // String? _validateConfirmPassword(String password, String confirmPassword) {
+  //   if (confirmPassword.isEmpty) {
+  //     return 'Please confirm your password';
+  //   } else if (password != confirmPassword) {
+  //     return 'Passwords do not match';
+  //   }
+  //   return null;
+  // }
 
-  String? _passwordError;
-  String? _emailError;
-  String? _confirmPasswordError;
+  // String? _passwordError;
+  // String? _emailError;
+  // String? _confirmPasswordError;
+  // // void _submitForm() {
+  // //   setState(() {
+  // //     // Manually validate the password when the user submits the form
+  // //     _passwordError = _validatePassword(_passwordController.text);
+  // //     _emailError = _validatePassword(_passwordController.text);
+  // //     _confirmPasswordError = _validatePassword(_passwordController.text);
+  // //   });
+  // // }
   // void _submitForm() {
+  //       final authProvider = Provider.of<FirebaseAuthService>(context,listen: false);
+
   //   setState(() {
-  //     // Manually validate the password when the user submits the form
+  //     // Manually validate the fields
+  //     _emailError = _validateEmail(_emailController.text);
   //     _passwordError = _validatePassword(_passwordController.text);
-  //     _emailError = _validatePassword(_passwordController.text);
-  //     _confirmPasswordError = _validatePassword(_passwordController.text);
+  //     _confirmPasswordError = _validateConfirmPassword(
+  //         _passwordController.text, _confirmPasswordController.text);
+
+  //     // If all fields are valid, show SnackBar
+  //     if (_emailError == null &&
+  //         _passwordError == null &&
+  //         _confirmPasswordError == null) {
+  //       authProvider.createUser(_emailController.text, _passwordController.text,context);
+
+  //       // print(_emailController.text);
+  //       // print(_passwordController.text);
+  //       // print(_confirmPasswordController.text);
+  //       // Navigator.push(
+  //       //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  //     }
   //   });
   // }
-  void _submitForm() {
-    setState(() {
-      // Manually validate the fields
-      _emailError = _validateEmail(_emailController.text);
-      _passwordError = _validatePassword(_passwordController.text);
-      _confirmPasswordError = _validateConfirmPassword(
-          _passwordController.text, _confirmPasswordController.text);
-
-      // If all fields are valid, show SnackBar
-      if (_emailError == null &&
-          _passwordError == null &&
-          _confirmPasswordError == null) {
-        createUser(_emailController.text, _passwordController.text);
-
-        // print(_emailController.text);
-        // print(_passwordController.text);
-        // print(_confirmPasswordController.text);
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      }
-    });
-  }
 
   // Function to submit the form after validation
   // void _submitForm() {
@@ -133,6 +138,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final validationProvider = Provider.of<ValidationProvider>(context);
+
     return Scaffold(
       // resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 20, 20, 20),
@@ -177,8 +184,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.only(left: 15, bottom: 8),
-                              child: Text(
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 8),
+                              child: const Text(
                                 "Email",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -203,7 +211,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 //   final error = _validateEmail(value);
                                 //   return null; // Always return null here
                                 // },
-                                controller: _emailController,
+                                controller: validationProvider.emailController,
                                 decoration: const InputDecoration(
                                     border: InputBorder
                                         .none, // Removes the bottom line
@@ -212,12 +220,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                         color: Colors.black, fontSize: 16)),
                               ),
                             ),
-                            if (_emailError != null)
+                            if (validationProvider.emailError != null)
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20.0, top: 5.0),
                                 child: Text(
-                                  _emailError!,
+                                  validationProvider.emailError!,
                                   style: const TextStyle(
                                       color: Color.fromARGB(255, 224, 65, 53),
                                       fontSize: 12),
@@ -235,8 +243,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.only(left: 15, bottom: 8),
-                              child: Text(
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 8),
+                              child: const Text(
                                 "Password",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -258,7 +267,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   color: Colors.white),
                               child: TextFormField(
                                 obscureText: true,
-                                controller: _passwordController,
+                                controller: validationProvider.passwordController,
                                 decoration: const InputDecoration(
                                     border: InputBorder
                                         .none, // Removes the bottom line
@@ -267,12 +276,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                         color: Colors.black, fontSize: 16)),
                               ),
                             ),
-                            if (_passwordError != null)
+                            if (validationProvider.passwordError != null)
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20.0, top: 5.0),
                                 child: Text(
-                                  _passwordError!,
+                                  validationProvider.passwordError!,
                                   style: const TextStyle(
                                       color: Color.fromARGB(255, 224, 65, 53),
                                       fontSize: 12),
@@ -290,8 +299,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.only(left: 15, bottom: 8),
-                              child: Text(
+                              padding:
+                                  const EdgeInsets.only(left: 15, bottom: 8),
+                              child: const Text(
                                 "Confirm Password",
                                 style: TextStyle(
                                     color: Colors.white,
@@ -312,7 +322,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                   color: Colors.white),
                               child: TextFormField(
-                                controller: _confirmPasswordController,
+                                controller: validationProvider.confirmPasswordController,
                                 obscureText: true,
                                 // validator: (value) {
                                 //   final error = _validateConfirmPassword(value);
@@ -326,12 +336,12 @@ class _SignupScreenState extends State<SignupScreen> {
                                         color: Colors.black, fontSize: 16)),
                               ),
                             ),
-                            if (_confirmPasswordError != null)
+                            if (validationProvider.confirmPasswordError != null)
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 20.0, top: 5.0),
                                 child: Text(
-                                  _confirmPasswordError!,
+                                  validationProvider.confirmPasswordError!,
                                   style: const TextStyle(
                                       color: Color.fromARGB(255, 224, 65, 53),
                                       fontSize: 12),
@@ -349,7 +359,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             // var number = code! + numberController.text;
-                            _submitForm();
+                            validationProvider.submitForm(context);
                             // print(number);
                             print('hello');
                           },

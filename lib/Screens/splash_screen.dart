@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chatapp/Screens/login_screen.dart';
+import 'package:chatapp/Screens/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,14 +22,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () async {
-      bool isLoggedIn = await whereToGo();
+    Timer(const Duration(seconds: 1), () async {
+      bool isLoggedIn = false;
+      // await whereToGo();
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   // isLoggedIn ? MessageScreen() :
-                  LoginScreen()));
+                LoginScreen()));
     });
   }
 
@@ -61,7 +63,8 @@ class _SplashScreenState extends State<SplashScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white)),
                           SvgPicture.asset('assets/images/login.svg'),
-                          Text("Stay connected\nwith your friends\nfamily",
+                          const Text(
+                              "Stay connected\nwith your friends\nfamily",
                               style: TextStyle(
                                   fontSize: 36,
                                   fontWeight: FontWeight.bold,

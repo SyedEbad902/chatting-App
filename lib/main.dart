@@ -1,17 +1,29 @@
 import 'package:chatapp/Screens/splash_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
+import 'package:chatapp/Services/database_service.dart';
 import 'package:chatapp/Services/image_picker_service.dart';
 import 'package:chatapp/Services/validation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // bool isLoggedIn = await whereToGo();
-
+  setupLocator();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
+}
+
+final getIt = GetIt.instance;
+
+void setupLocator() {
+  
+  getIt.registerLazySingleton<FirebaseAuthService>(() => FirebaseAuthService());
+  getIt.registerLazySingleton<DatabaseServiceProvider>(
+      () => DatabaseServiceProvider());
+  getIt.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
 }
 
 // Future<bool> whereToGo() async {
@@ -32,7 +44,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => FirebaseAuthService()),
           ChangeNotifierProvider(create: (_) => ValidationProvider()),
           ChangeNotifierProvider(create: (_) => ImagePickerService()),
-          // ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
+          ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
         ],
         child: const MaterialApp(
           debugShowCheckedModeBanner: false,

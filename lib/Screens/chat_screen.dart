@@ -1,23 +1,47 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chatapp/Models/message_model.dart';
 import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it/get_it.dart';
 
-class MessageScreen extends StatefulWidget {
-  const MessageScreen({super.key});
+class ChatScreen extends StatefulWidget {
+  final chatUser;
+  const ChatScreen({super.key, required this.chatUser});
 
   @override
-  State<MessageScreen> createState() => _MessageScreenState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _MessageScreenState extends State<MessageScreen> {
+class _ChatScreenState extends State<ChatScreen> {
+  final GetIt _getIt = GetIt.instance;
+  late FirebaseAuthService authservice;
+  late DatabaseServiceProvider databaseservice;
+
+  ChatUser? currentUser, otherUser;
+
+  @override
+  void initState() {
+    super.initState();
+    authservice = _getIt.get<FirebaseAuthService>();
+    databaseservice = _getIt.get<DatabaseServiceProvider>();
+    currentUser = ChatUser(
+        id: authservice.credential.currentUser!.uid,
+        firstName: authservice.credential.currentUser!.displayName);
+    otherUser = ChatUser(
+        id: widget.chatUser["uid"],
+        firstName: widget.chatUser["imageName"],
+        profileImage: widget.chatUser["imageUrl"]);
+  }
+
   @override
   Widget build(BuildContext context) {
     // final databaseProvider = Provider.of<DatabaseServiceProvider>(context);
-    final authProvider = Provider.of<FirebaseAuthService>(context);
+
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xff414A4C),
         body: Stack(children: [
           SizedBox(
@@ -36,35 +60,35 @@ class _MessageScreenState extends State<MessageScreen> {
                       right: MediaQuery.of(context).size.width * 0.05,
                       top: MediaQuery.of(context).size.height * 0.07),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Welcome Ebad!",
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white),
+                      CircleAvatar(
+                        radius: 27,
+                        backgroundImage: CachedNetworkImageProvider(
+                            widget.chatUser["imageUrl"]),
                       ),
-                      GestureDetector(
-                          onTap: () {
-                            authProvider.signOut(context);
-                          },
-                          child: const Icon(
-                            Icons.logout_outlined,
-                            size: 25,
-                            color: Colors.white,
-                          )),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 15, top: 8, bottom: 8),
+                        child: Text(
+                          "${widget.chatUser["imageName"]}",
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ),
                     ],
                   ),
                 )
               ])),
           DraggableScrollableSheet(
-              initialChildSize: 0.8, // 30% of the screen height
+              initialChildSize: 0.83, // 30% of the screen height
               minChildSize:
-                  0.8, // Minimum size (fixed at 30% of the screen height)
+                  0.83, // Minimum size (fixed at 30% of the screen height)
               maxChildSize:
-                  0.8, // Maximum size (fixed at 30% of the screen height)
+                  0.83, // Maximum size (fixed at 30% of the screen height)
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
@@ -76,105 +100,81 @@ class _MessageScreenState extends State<MessageScreen> {
                       ),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: StreamBuilder(
-                          stream: authProvider.getUserProfiles(),
-                          builder: (context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                            top: 5,
+                            right: 5,
+                            left: 5 // This handles the keyboard
+                            ),
+                        child: StreamBuilder(
+                          stream: databaseservice.getChat(
+                              currentUser!.id, otherUser!.id),
+                          builder: (BuildContext context, snapshot) {
+                            final chat = snapshot.data;
+                            List<ChatMessage> messages = [];
+                            // print(chat!["messages"]);
+                            if (chat != null && chat["messages"] != null) {
+                              messages =
+                                  generateChatMessageList(chat["messages"]);
                             }
-                            if (snapshot.hasError) {
-                              return Center(
-                                  child: Text('Error: ${snapshot.error}'));
-                            }
-
-                            if (!snapshot.hasData ||
-                                snapshot.data!.docs.isEmpty) {
-                              return const Center(child: Text('No profiles found.'));
-                            }
-
-                            // Get the list of profiles excluding the current user
-                            List<QueryDocumentSnapshot<Map<String, dynamic>>>
-                                userProfiles = snapshot.data!.docs;
-                            print(userProfiles);
-                            return ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return const Divider(
-                                  color: Color.fromARGB(255, 224, 223, 223),
-                                  indent: 10,
-                                  endIndent: 10,
-                                );
-                              },
-                              controller: scrollController,
-                              itemCount: userProfiles.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: NetworkImage(
-                                        userProfiles[index]["imageUrl"]
-
-                                        // 'assets/images/user1.png',
-                                        // height: 50,
-                                        // width: 50,
-                                        ),
-                                  ),
-                                  title: Text(
-                                    userProfiles[index]["imageName"],
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  subtitle: const Text(
-                                    "oky sure",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  trailing: const Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "12:55",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Icon(
-                                        Icons.done_all,
-                                        size: 17,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          }),
-                    )
-                    //  Column(
-                    //   children: [
-                    //     Container(
-                    //       height: MediaQuery.of(context).size.height * 0.2,
-                    //       // decoration: BoxDecoration(border: Border(bottom: Bo)),
-                    //       width: double.infinity,
-                    //       child: Stack(
-                    //         fit: StackFit.passthrough,
-                    //         children: [
-                    //           Image.asset(
-                    //             'assets/images/login-background.png', // Replace with your image path
-                    //             fit: BoxFit
-                    //                 .cover, // This makes the image fill the screen while maintaining its aspect ratio
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-
-                    );
-              })
+                            return DashChat(
+                                messageListOptions: const MessageListOptions(
+                                    separatorFrequency:
+                                        SeparatorFrequency.hours),
+                                messageOptions: MessageOptions(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width * 0.7,
+                                    messagePadding: const EdgeInsets.all(10),
+                                    containerColor: const Color(0xffFFC700)
+                                        .withOpacity(0.25),
+                                    currentUserTextColor: Colors.black,
+                                    currentUserContainerColor:
+                                        const Color(0xffFF8933)
+                                            .withOpacity(0.25),
+                                    showOtherUsersAvatar: true,
+                                    timePadding: const EdgeInsets.all(2),
+                                    timeFontSize: 10,
+                                    showTime: true),
+                                    
+                                inputOptions: InputOptions(
+                                    alwaysShowSend: true,
+                                    sendOnEnter: true,
+                                    inputDecoration: InputDecoration(
+                                      
+                                    ),
+                                    cursorStyle: CursorStyle(
+                                      
+                                        color: Color(0xffFFC700)
+                                            .withOpacity(0.25))),
+                                currentUser: currentUser!,
+                                onSend: sendMessage,
+                                messages: messages);
+                          },
+                        )));
+              }),
         ]));
+  }
+
+  Future<void> sendMessage(ChatMessage chatMessage) async {
+    Message message = Message(
+        senderID: currentUser!.id,
+        content: chatMessage.text,
+        messageType: MessageType.Text,
+        sentAt: Timestamp.fromDate(chatMessage.createdAt));
+    await databaseservice.sendChatMessage(
+        currentUser!.id, otherUser!.id, message);
+  }
+
+  List<ChatMessage> generateChatMessageList(List messages) {
+    List<ChatMessage> chatMessage = messages.map((m) {
+      return ChatMessage(
+          user: m["senderID"] == currentUser!.id ? currentUser! : otherUser!,
+          text: m["content"],
+          createdAt: m["sentAt"]!.toDate());
+    }).toList();
+    chatMessage.sort((a, b) {
+      return b.createdAt.compareTo(a.createdAt);
+    });
+    return chatMessage;
   }
 }

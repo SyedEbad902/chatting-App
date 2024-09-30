@@ -1,5 +1,10 @@
 import 'dart:io';
-import 'package:chatapp/Screens/chat_screen.dart';
+
+import 'package:chatapp/Screens/home_screen.dart';
+import 'package:chatapp/Screens/navbar.dart';
+import 'package:chatapp/Services/auth_service.dart';
+import 'package:chatapp/Services/database_service.dart';
+import 'package:chatapp/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:delightful_toast/delight_toast.dart';
 import 'package:delightful_toast/toast/components/toast_card.dart';
@@ -14,16 +19,20 @@ import 'package:path/path.dart' as p;
 class ImagePickerService extends ChangeNotifier {
   bool isloading = false;
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final authProvider = getIt<FirebaseAuthService>();
+
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  //for gallery images
+  final databaseProvider = getIt<DatabaseServiceProvider>();
+
+  //to upload file image  to firebase
 
   Future<void> uploadGalleryImage(
       File imageFile, String userName, BuildContext context) async {
     try {
       // Get current user UID
-      final user = _auth.currentUser;
+      final user = authProvider.credential.currentUser;
       final uid = user?.uid;
 
       // Upload the image to Firebase Storage with a unique name
@@ -47,8 +56,10 @@ class ImagePickerService extends ChangeNotifier {
       print('Image uploaded and data stored in Firestore');
       isloading = false;
       notifyListeners();
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const MessageScreen()));
+       authProvider.userProfileMap?.clear();
+      await getCurrentUserProfile();
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const MessageScreen()));
       DelightToast(
               text: "Your profile hs been setup successfully",
               icon: Icons.done,
@@ -65,7 +76,7 @@ class ImagePickerService extends ChangeNotifier {
       print('Error uploading image: $e');
     }
   }
-  //for asset image
+  //to upload asset  to firebase
 
   Future<void> uploadAssetImage(
       String assetPath, String userName, BuildContext context) async {
@@ -75,7 +86,7 @@ class ImagePickerService extends ChangeNotifier {
       Uint8List imageData = byteData.buffer.asUint8List();
 
       // Get current user UID
-      final user = _auth.currentUser;
+      final user = authProvider.credential.currentUser;
       final uid = user?.uid;
 
       // Create a unique name for the image based on UID
@@ -100,13 +111,17 @@ class ImagePickerService extends ChangeNotifier {
       print('Image uploaded and data stored in Firestore');
       isloading = false;
       notifyListeners();
+      authProvider.userProfileMap?.clear();
+      await getCurrentUserProfile();
+
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const MessageScreen()));
+          context, MaterialPageRoute(builder: (context) => const MyNavBar()));
     } catch (e) {
       print('Error uploading image: $e');
     }
   }
 
+//for pick image from gallery
   final ImagePicker picker = ImagePicker();
 
   Future<File?> getImage() async {
@@ -117,9 +132,30 @@ class ImagePickerService extends ChangeNotifier {
     return null;
   }
 
-  // toast(BuildContext context) {
-  //   DelightToast().show(context);
-  // }
+//get current user profile
+  Future<Map<String, dynamic>?> getCurrentUserProfile() async {
+    // Get the current user's UID from Firebase Authentication
+    final String currentUserUid = authProvider.credential.currentUser!.uid;
+
+    // Fetch the current user's profile document from Firestore
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .doc(
+            currentUserUid) // Retrieve the document where the UID matches the current user's UID
+        .get();
+
+    // Check if the document exists and return the profile data
+    if (snapshot.exists) {
+      authProvider.userProfileMap = snapshot.data();
+      return authProvider
+          .userProfileMap; // This returns the document data as a Map<String, dynamic>
+    } else {
+      return null; // Return null if the document doesn't exist
+    }
+  }
+
+//for toasts
 
   DelightToastBar DelightToast(
       {required String text,

@@ -42,7 +42,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     children: [
                       Text(
                         "Welcome ${authProvider.userProfileMap!["imageName"]}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w700,
                             color: Colors.white),

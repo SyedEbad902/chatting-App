@@ -135,16 +135,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                     timePadding: const EdgeInsets.all(2),
                                     timeFontSize: 10,
                                     showTime: true),
-                                    
                                 inputOptions: InputOptions(
                                     alwaysShowSend: true,
                                     sendOnEnter: true,
-                                    inputDecoration: InputDecoration(
-                                      
-                                    ),
+                                    inputDecoration: const InputDecoration(),
                                     cursorStyle: CursorStyle(
-                                      
-                                        color: Color(0xffFFC700)
+                                        color: const Color(0xffFFC700)
                                             .withOpacity(0.25))),
                                 currentUser: currentUser!,
                                 onSend: sendMessage,
@@ -156,11 +152,17 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> sendMessage(ChatMessage chatMessage) async {
+    String? currentTime = await databaseservice.getCurrentTimeFromInternet();
+    DateTime parsedTime = DateTime.parse(currentTime!);
+
+    // Convert the `DateTime` to Firestore Timestamp
+    Timestamp timeStamp = Timestamp.fromDate(parsedTime);
+
     Message message = Message(
         senderID: currentUser!.id,
         content: chatMessage.text,
         messageType: MessageType.Text,
-        sentAt: Timestamp.fromDate(chatMessage.createdAt));
+        sentAt: timeStamp);
     await databaseservice.sendChatMessage(
         currentUser!.id, otherUser!.id, message);
   }
@@ -172,9 +174,23 @@ class _ChatScreenState extends State<ChatScreen> {
           text: m["content"],
           createdAt: m["sentAt"]!.toDate());
     }).toList();
+    // chatMessage.sort((a, b) {
+    //   return b.createdAt.compareTo(a.createdAt);
+    // });
     chatMessage.sort((a, b) {
-      return b.createdAt.compareTo(a.createdAt);
+      DateTime dateA = parseDateTime(a.createdAt.toString());
+      DateTime dateB = parseDateTime(b.createdAt.toString());
+
+      return dateB.compareTo(dateA); // Sorting in descending order
     });
     return chatMessage;
+  }
+
+// Function to parse date from string
+  DateTime parseDateTime(String dateString) {
+    dateString = dateString.replaceFirst(' at ', ' UTC+');
+
+    // Try parsing the string as an ISO 8601 date with microseconds
+    return DateTime.parse(dateString);
   }
 }

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chatapp/Models/message_model.dart';
 import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DatabaseServiceProvider extends ChangeNotifier {
   // Map<String, dynamic>? userProfileMap = {};
@@ -24,17 +26,13 @@ class DatabaseServiceProvider extends ChangeNotifier {
   Future<bool> checkChatExist(String uid1, String uid2) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
     final result = await _firestore.collection("chats").doc(chatId).get();
-    if (result != null) {
-      return result.exists;
-    } else {
-      return false;
-    }
+    return result.exists;
   }
 
   Future<void> createNewChat(
       {required String uid1, required String uid2}) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    final docRef = await _firestore.collection("chats").doc(chatId);
+    final docRef = _firestore.collection("chats").doc(chatId);
     final chat = {
       "id": chatId,
       "participants": [uid1, uid2],
@@ -46,15 +44,45 @@ class DatabaseServiceProvider extends ChangeNotifier {
   Future<void> sendChatMessage(
       String uid1, String uid2, Message message) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    final docRef = await _firestore.collection("chats").doc(chatId);
+    final docRef = _firestore.collection("chats").doc(chatId);
     await docRef.update({
       "messages": FieldValue.arrayUnion([message.toJson()])
     });
   }
 
+  Future<String?> getCurrentTimeFromInternet() async {
+    try {
+      // World Time API URL (you can change the timezone)
+      final url = Uri.parse("http://worldtimeapi.org/api/ip");
+
+      // Send HTTP GET request
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // Parse the JSON response
+        final data = jsonDecode(response.body);
+
+        // Get the datetime string
+        String dateTimeStr = data['datetime'];
+        // print(dateTimeStr);
+        // Parse the string to DateTime
+        DateTime currentTime = DateTime.parse(dateTimeStr);
+
+        return dateTimeStr;
+      } else {
+        print('Failed to fetch time. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching time: $e');
+      return null;
+    }
+  }
+
   Stream<DocumentSnapshot<Map>> getChat(String uid1, String uid2) {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    return _firestore.collection("chats").doc(chatId).snapshots() as Stream<DocumentSnapshot<Map>>;
+    return _firestore.collection("chats").doc(chatId).snapshots()
+        as Stream<DocumentSnapshot<Map>>;
   }
 
   String generateChatId({required String uid1, required String uid2}) {

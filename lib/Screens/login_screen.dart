@@ -169,8 +169,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           //     await SharedPreferences.getInstance();
                           // await prefs.setBool('isLoggedIn', true);
                           // print(number);
-                         authProvider.signinUser(
-                              emailController.text, passwordController.text,context);
+                          authProvider.signinUser(emailController.text,
+                              passwordController.text, context);
+                          //     .then((value) {
+                          //   authProvider.onUserLogin();
+                          // });
+
                           // print(emailController.text);
                           // print(passwordController.text);
                           // print('hello');

@@ -4,6 +4,8 @@ import 'package:chatapp/Screens/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class FirebaseAuthService extends ChangeNotifier {
   // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -30,9 +32,12 @@ class FirebaseAuthService extends ChangeNotifier {
       if (userExists) {
         userProfileMap?.clear();
         await getCurrentUserProfile();
+        onUserLogin();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const MyNavBar()));
       } else {
+        onUserLogin();
+
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const ProfileScreen()));
       }
@@ -53,6 +58,7 @@ class FirebaseAuthService extends ChangeNotifier {
       // Navigate to the login or welcome screen after signing out (optional)
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const LoginScreen()));
+      ZegoUIKitPrebuiltCallInvitationService().uninit();
     } catch (e) {
       print('Error signing out: $e');
       // You can also show a dialog or a snackbar with the error message
@@ -116,4 +122,58 @@ class FirebaseAuthService extends ChangeNotifier {
   //           isNotEqualTo: currentUserUid) // Exclude the current user's profile
   //       .snapshots();
   // }
+
+  void onUserLogin() {
+    /// 1.2.1. initialized ZegoUIKitPrebuiltCallInvitationService
+    /// when app's user is logged in or re-logged in
+    /// We recommend calling this method as soon as the user logs in to your app.
+    ZegoUIKitPrebuiltCallInvitationService().init(
+      appID: 2087105392 /*input your AppID*/,
+      appSign:
+          "96e4ea6eb8c59732dddaa6b832a30920fa30f3688c6976674b60cbbbe1bdf7a4" /*input your AppSign*/,
+      userID: credential.currentUser!.uid,
+      userName: userProfileMap!["imageName"],
+      plugins: [ZegoUIKitSignalingPlugin()],
+      notificationConfig: ZegoCallInvitationNotificationConfig(
+        androidNotificationConfig: ZegoCallAndroidNotificationConfig(
+          showFullScreen: true,
+          fullScreenBackgroundAssetURL: 'assets/image/call.png',
+          callChannel: ZegoCallAndroidNotificationChannelConfig(
+            channelID: "ZegoUIKit",
+            channelName: "Call Notifications",
+            sound: "call",
+            icon: "call",
+          ),
+          missedCallChannel: ZegoCallAndroidNotificationChannelConfig(
+            channelID: "MissedCall",
+            channelName: "Missed Call",
+            sound: "missed_call",
+            icon: "missed_call",
+            vibrate: false,
+          ),
+        ),
+        iOSNotificationConfig: ZegoCallIOSNotificationConfig(
+          systemCallingIconName: 'CallKitIcon',
+        ),
+      ),
+      requireConfig: (ZegoCallInvitationData data) {
+        final config = (data.invitees.length > 1)
+            ? ZegoCallInvitationType.videoCall == data.type
+                ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
+                : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
+            : ZegoCallInvitationType.videoCall == data.type
+                ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+                : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
+
+        // config.avatarBuilder = customAvatarBuilder;
+
+        /// support minimizing, show minimizing button
+        config.topMenuBar.isVisible = true;
+        config.topMenuBar.buttons
+            .insert(0, ZegoCallMenuBarButtonName.minimizingButton);
+
+        return config;
+      },
+    );
+  }
 }

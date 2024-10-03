@@ -10,13 +10,13 @@ import 'package:http/http.dart' as http;
 
 class DatabaseServiceProvider extends ChangeNotifier {
   // Map<String, dynamic>? userProfileMap = {};
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final authProvider = getIt<FirebaseAuthService>();
 
   // Get the current user's UID
   Stream<QuerySnapshot<Map<String, dynamic>>> getUserProfiles() {
     final String currentUserUid = authProvider.credential.currentUser!.uid;
-    return _firestore
+    return firestore
         .collection('users')
         .where('uid',
             isNotEqualTo: currentUserUid) // Exclude the current user's profile
@@ -25,14 +25,14 @@ class DatabaseServiceProvider extends ChangeNotifier {
 
   Future<bool> checkChatExist(String uid1, String uid2) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    final result = await _firestore.collection("chats").doc(chatId).get();
+    final result = await firestore.collection("chats").doc(chatId).get();
     return result.exists;
   }
 
   Future<void> createNewChat(
       {required String uid1, required String uid2}) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    final docRef = _firestore.collection("chats").doc(chatId);
+    final docRef = firestore.collection("chats").doc(chatId);
     final chat = {
       "id": chatId,
       "participants": [uid1, uid2],
@@ -44,7 +44,7 @@ class DatabaseServiceProvider extends ChangeNotifier {
   Future<void> sendChatMessage(
       String uid1, String uid2, Message message) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    final docRef = _firestore.collection("chats").doc(chatId);
+    final docRef = firestore.collection("chats").doc(chatId);
     await docRef.update({
       "messages": FieldValue.arrayUnion([message.toJson()])
     });
@@ -81,7 +81,7 @@ class DatabaseServiceProvider extends ChangeNotifier {
 
   Stream<DocumentSnapshot<Map>> getChat(String uid1, String uid2) {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
-    return _firestore.collection("chats").doc(chatId).snapshots()
+    return firestore.collection("chats").doc(chatId).snapshots()
         as Stream<DocumentSnapshot<Map>>;
   }
 

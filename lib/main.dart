@@ -7,14 +7,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   await Firebase.initializeApp();
+final navigatorKey = GlobalKey<NavigatorState>();
 
-  runApp(const MyApp());
-}
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
+  // call the useSystemCallingUI
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
+    );
+  runApp( MyApp(navigatorKey: navigatorKey));
+});}
 
 final getIt = GetIt.instance;
 
@@ -31,11 +43,19 @@ void setupLocator() {
 //   return prefs.getBool('isLoggedIn') ?? false;
 // }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+    final GlobalKey<NavigatorState>  navigatorKey;
   const MyApp({
-    super.key,
+      required this.navigatorKey,
+          super.key,
+
   });
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -46,9 +66,11 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (_) => ImagePickerService()),
           ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
         ],
-        child: const MaterialApp(
+        child:  MaterialApp(
+      navigatorKey: widget.navigatorKey,
+
           debugShowCheckedModeBanner: false,
-          home: SplashScreen(),
+          home: const SplashScreen(),
         ));
   }
 }

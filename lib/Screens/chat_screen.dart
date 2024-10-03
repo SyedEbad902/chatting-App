@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatapp/Models/message_model.dart';
 import 'package:chatapp/Services/auth_service.dart';
@@ -6,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class ChatScreen extends StatefulWidget {
   final chatUser;
@@ -34,6 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
         id: widget.chatUser["uid"],
         firstName: widget.chatUser["imageName"],
         profileImage: widget.chatUser["imageUrl"]);
+    authservice.getCurrentUserProfile();
   }
 
   @override
@@ -79,6 +83,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               color: Colors.white),
                         ),
                       ),
+                      const Spacer(),
+                      callingButton(false),
+                      callingButton(true)
                     ],
                   ),
                 )
@@ -150,6 +157,72 @@ class _ChatScreenState extends State<ChatScreen> {
               }),
         ]));
   }
+
+  ZegoSendCallInvitationButton callingButton(bool isVideo) {
+    return ZegoSendCallInvitationButton(
+      isVideoCall: isVideo,
+      onWillPressed: () async {
+        try {
+          String? getTime = await databaseservice.getCurrentTimeFromInternet();
+          String chatId = databaseservice.generateChatId(
+              uid1: currentUser!.id, uid2: otherUser!.id);
+          // Perform Firestore operation before sending the call invitation
+          await FirebaseFirestore.instance
+              .collection('call_invitations')
+              .doc(chatId)
+              .set({
+            'calls': FieldValue.arrayUnion([
+              {
+                'callerName': authservice.userProfileMap!["imageName"],
+                'inviteeIDs': otherUser!.id,
+                'inviteeName': otherUser!.firstName,
+                'isVideoCall': isVideo,
+                'timestamp': getTime,
+              }
+            ]),
+          }, SetOptions(merge: true));
+          print('Call data added to Firestore successfully');
+
+          // Returning true allows the call to proceed
+          return true;
+        } catch (e) {
+          print('Error adding call data to Firestore: $e');
+          // Returning false cancels the call if there's an error
+          return false;
+        }
+      },
+      resourceID: "zegouikit_call",
+      iconSize: const Size(40, 40),
+      buttonSize: const Size(50, 50),
+      invitees: [
+        ZegoUIKitUser(
+          id: otherUser!.id,
+          name: otherUser!.firstName!,
+        ),
+      ],
+    );
+  }
+
+  // void addCallDataToFirestore(String resourceID, String inviterID,
+  //     List<String> invitees, bool isVideo) async {
+  //   try {
+  //     String chatId = databaseservice.generateChatId(
+  //         uid1: currentUser!.id, uid2: otherUser!.id);
+  //     await FirebaseFirestore.instance.collection('call_invitations').doc(chatId).update(
+  //       {
+  //          'calls': FieldValue.arrayUnion([{
+  //         'callerID': currentUser!.firstName,
+  //         'inviteeIDs': otherUser!.firstName,
+  //         'isVideoCall': isVideo,
+  //         'timestamp': FieldValue.serverTimestamp(),
+  //          }]),
+  //       },
+  //     );
+  //     print("Call data added to Firestore successfully!");
+  //   } catch (e) {
+  //     print("Error adding call data to Firestore: $e");
+  //   }
+  // }
 
   Future<void> sendMessage(ChatMessage chatMessage) async {
     String? currentTime = await databaseservice.getCurrentTimeFromInternet();

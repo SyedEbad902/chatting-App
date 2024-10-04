@@ -1,3 +1,4 @@
+import 'package:chatapp/Screens/call_screen.dart';
 import 'package:chatapp/Screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,7 +15,7 @@ class _MyNavBarState extends State<MyNavBar> {
   List screens = [
     const MessageScreen(),
     const Scaffold(),
-    const Scaffold(),
+    const CallScreen(),
     const Scaffold(),
   ];
   @override
@@ -46,17 +47,31 @@ class _MyNavBarState extends State<MyNavBar> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      currentIndex = 0;
+                    });
+                  },
                   child: SvgPicture.asset(
                     'assets/images/message-icon.svg',
                     height: 28,
                     width: 28,
+                    color: currentIndex == 0
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
+
                     // color: Colors.amber,
                   ),
                 ),
-                const Text(
+                Text(
                   "Message",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: currentIndex == 0
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
+                  ),
                 )
               ],
             ),
@@ -64,17 +79,31 @@ class _MyNavBarState extends State<MyNavBar> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      currentIndex = 1;
+                    });
+                  },
                   child: SvgPicture.asset(
                     'assets/images/search-icon.svg',
                     height: 28,
                     width: 28,
+                    color: currentIndex == 1
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
+
                     // color: Colors.amber,
                   ),
                 ),
-                const Text(
+                Text(
                   "Search",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: currentIndex == 1
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
+                  ),
                 )
               ],
             ),
@@ -82,17 +111,29 @@ class _MyNavBarState extends State<MyNavBar> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      currentIndex = 2;
+                    });
+                  },
                   child: SvgPicture.asset(
                     'assets/images/call-icon.svg',
                     height: 28,
                     width: 28,
-                    // color: Colors.amber,
+                    color: currentIndex == 2
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
                   ),
                 ),
-                const Text(
+                Text(
                   "Calls",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: currentIndex == 2
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
+                  ),
                 )
               ],
             ),
@@ -101,15 +142,28 @@ class _MyNavBarState extends State<MyNavBar> {
               // mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currentIndex = 3;
+                    });
+                  },
                   child: Icon(
                     Icons.person,
                     size: 28,
-                    color: currentIndex == 4 ? Colors.blue : Colors.black,
+                    color: currentIndex == 3
+                        ? Colors.black
+                        : Color.fromARGB(255, 129, 129, 129),
                   ),
                 ),
-                const Text(
+                Text(
                   "Profile",
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: currentIndex == 3
+                        ? Colors.black
+                        : const Color.fromARGB(255, 129, 129, 129),
+                  ),
                 )
               ],
             ),

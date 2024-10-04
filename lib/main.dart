@@ -1,5 +1,6 @@
 import 'package:chatapp/Screens/splash_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
+import 'package:chatapp/Services/calling_service.dart';
 import 'package:chatapp/Services/database_service.dart';
 import 'package:chatapp/Services/image_picker_service.dart';
 import 'package:chatapp/Services/validation_service.dart';
@@ -65,6 +66,7 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => ValidationProvider()),
           ChangeNotifierProvider(create: (_) => ImagePickerService()),
           ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
+          ChangeNotifierProvider(create: (_) => CallingService()),
         ],
         child:  MaterialApp(
       navigatorKey: widget.navigatorKey,

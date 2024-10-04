@@ -169,12 +169,13 @@ class _ChatScreenState extends State<ChatScreen> {
           // Perform Firestore operation before sending the call invitation
           await FirebaseFirestore.instance
               .collection('call_invitations')
-              .doc(chatId)
+              .doc(authservice.userProfileMap!["uid"])
               .set({
             'calls': FieldValue.arrayUnion([
               {
                 'callerName': authservice.userProfileMap!["imageName"],
-                'inviteeIDs': otherUser!.id,
+                'callerID': authservice.userProfileMap!["uid"],
+                'inviteeID': otherUser!.id,
                 'inviteeName': otherUser!.firstName,
                 'isVideoCall': isVideo,
                 'timestamp': getTime,

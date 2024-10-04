@@ -1,5 +1,6 @@
 import 'package:chatapp/Screens/signup_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
+import 'package:chatapp/Services/calling_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthService>(context);
+    final callProvider = Provider.of<CallingService>(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 20, 20),
       body: SingleChildScrollView(
@@ -171,6 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // print(number);
                           authProvider.signinUser(emailController.text,
                               passwordController.text, context);
+                          // callProvider.getAllCalls();
                           //     .then((value) {
                           //   authProvider.onUserLogin();
                           // });

@@ -33,6 +33,7 @@ class FirebaseAuthService extends ChangeNotifier {
         userProfileMap?.clear();
         await getCurrentUserProfile();
         onUserLogin();
+
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const MyNavBar()));
       } else {

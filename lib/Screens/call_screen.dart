@@ -83,18 +83,18 @@ class _CallScreenState extends State<CallScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(child: CircularProgressIndicator());
                             }
 
                             if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return Center(child: Text("No call logs found"));
+                              return const Center(child: Text("No call logs found"));
                             }
 
                             // List<Map<String, dynamic>> calls = snapshot.data!;
 
                             return ListView.separated(
                               separatorBuilder: (context, index) {
-                                return Divider(
+                                return const Divider(
                                   indent: 5,
                                   endIndent: 5,
                                   thickness: 1,

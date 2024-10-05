@@ -40,6 +40,9 @@ class CallingService extends ChangeNotifier {
       }
     }
     print("This is all callss of $allCalls");
+    allCalls.sort((a, b) => DateTime.parse(b["timestamp"])
+        .compareTo(DateTime.parse(a["timestamp"])));
+
     return allCalls;
   }
 

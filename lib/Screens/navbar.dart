@@ -1,5 +1,6 @@
 import 'package:chatapp/Screens/call_screen.dart';
 import 'package:chatapp/Screens/home_screen.dart';
+import 'package:chatapp/Screens/stories_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -14,7 +15,7 @@ class _MyNavBarState extends State<MyNavBar> {
   int currentIndex = 0;
   List screens = [
     const MessageScreen(),
-    const Scaffold(),
+    const StoriesScreen(),
     const CallScreen(),
     const Scaffold(),
   ];
@@ -31,18 +32,6 @@ class _MyNavBarState extends State<MyNavBar> {
           // mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // IconButton(
-            //   onPressed: () {
-            //     setState(() {
-            //       currentIndex = 0;
-            //     });
-            //   },
-            //   icon: Icon(
-            //     Icons.message,
-            //     size: 30,
-            //     color: currentIndex == 0 ? Colors.blue : Colors.grey,
-            //   ),
-            // ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -152,7 +141,7 @@ class _MyNavBarState extends State<MyNavBar> {
                     size: 28,
                     color: currentIndex == 3
                         ? Colors.black
-                        : Color.fromARGB(255, 129, 129, 129),
+                        : const Color.fromARGB(255, 129, 129, 129),
                   ),
                 ),
                 Text(

@@ -54,6 +54,8 @@ dependencies:
   http: ^1.2.2
   zego_uikit_prebuilt_call: ^4.16.2
   zego_uikit_signaling_plugin: ^2.8.4
+  status_view: ^0.0.2
+  story_view: ^0.16.5
 
 dev_dependencies:
   flutter_test:

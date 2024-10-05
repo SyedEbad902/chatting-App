@@ -956,10 +956,10 @@ packages:
     dependency: transitive
     description:
       name: rxdart
-      sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.28.0"
+    version: "0.27.7"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1069,6 +1069,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  status_view:
+    dependency: "direct main"
+    description:
+      name: status_view
+      sha256: aff3397295cf23d51c2206e56da320e8095ea0340f31ea2395c8807186dac1ba
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
+  story_view:
+    dependency: "direct main"
+    description:
+      name: story_view
+      sha256: ab64063569178e405b643ab11bdc28d6e85333191e3c8b5556e864fe6c5b2a5a
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.16.5"
   stream_channel:
     dependency: transitive
     description:

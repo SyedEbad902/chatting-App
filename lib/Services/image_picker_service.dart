@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:chatapp/Screens/home_screen.dart';
 import 'package:chatapp/Screens/navbar.dart';
 import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/database_service.dart';
@@ -55,10 +54,10 @@ class ImagePickerService extends ChangeNotifier {
       print('Image uploaded and data stored in Firestore');
       isloading = false;
       notifyListeners();
-       authProvider.userProfileMap?.clear();
+      authProvider.userProfileMap?.clear();
       await getCurrentUserProfile();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const MessageScreen()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const MyNavBar()));
       DelightToast(
               text: "Your profile hs been setup successfully",
               icon: Icons.done,
@@ -185,4 +184,123 @@ class ImagePickerService extends ChangeNotifier {
       ),
     );
   }
+
+//upload stories
+
+  Future<void> pickAndUploadStory(
+      String userId, String userName, String profilePictureUrl) async {
+    try {
+      // Step 1: Pick an image using image_picker
+      // final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+      // Check if the user selected a file
+      if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+        // Step 2: Upload the image to Firebase Storage
+        FirebaseStorage storage = FirebaseStorage.instance;
+        Reference storageRef = storage.ref().child("stories/$userId/$fileName");
+        UploadTask uploadTask = storageRef.putFile(imageFile);
+
+        // Wait until the upload is complete
+        TaskSnapshot storageSnapshot = await uploadTask;
+        String mediaUrl = await storageSnapshot.ref.getDownloadURL();
+
+        // Step 3: Store the story data in Firestore
+        CollectionReference stories =
+            FirebaseFirestore.instance.collection('stories');
+
+        await stories.doc(userId).set({
+          "userId" : userId,
+          "userName": userName,
+          "profilePicture": profilePictureUrl,
+          "timestamp": DateTime.now(),
+          "stories": FieldValue.arrayUnion([
+            // "mediaUrl":
+            mediaUrl,
+            // "mediaType": "image", // Could be dynamic if you support video
+            // "timestamp": DateTime.now(),
+            // "viewedBy": []
+          ])
+        }, SetOptions(merge: true));
+
+        print("Story uploaded successfully");
+      } else {
+        // If no image is selected, print a message
+        print("No image selected");
+      }
+    } catch (e) {
+      print("Failed to upload story: $e");
+    }
+  }
+
+//get stories
+  Stream<QuerySnapshot> getStories() {
+    return FirebaseFirestore.instance.collection('stories').snapshots();
+  }
+// import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'dart:io';
+
+  // Future<void> pickAndUploadStory() async {
+  //   try {
+  //     String userId = authProvider.userProfileMap!["uid"];
+  //     print(userId);
+  //     String userName = authProvider.userProfileMap!["imageName"];
+  //     print(userName);
+
+  //     String profilePictureUrl = authProvider.userProfileMap!["imageUrl"];
+  //     print(profilePictureUrl);
+
+  //     // Step 1: Pick an image using image_picker
+  //     // final picker = ImagePicker();
+  //     // final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+  //      final File? pickedFile = await getImage();
+  //     ;
+  //     // if (pickedFile != null) {
+  //     //   return File(pickedFile.path);
+  //     // }
+
+  //     if (pickedFile != null) {
+  //       File imageFile = File(pickedFile.path);
+  //       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+  //       // Step 2: Upload the image to Firebase Storage
+  //       FirebaseStorage storage = FirebaseStorage.instance;
+  //       Reference storageRef = storage.ref().child("stories/$userId/$fileName");
+  //       UploadTask uploadTask = storageRef.putFile(imageFile);
+
+  //       // Wait until the upload is complete
+  //       TaskSnapshot storageSnapshot = await uploadTask;
+  //       String mediaUrl = await storageSnapshot.ref.getDownloadURL();
+
+  //       // Step 3: Store the story data in Firestore
+  //       CollectionReference stories =
+  //           FirebaseFirestore.instance.collection('stories');
+
+  //       await stories.doc(userId).set({
+  //         "userName": userName,
+  //         "profilePicture": profilePictureUrl,
+  //         "timestamp": DateTime.now(),
+  //         "stories": FieldValue.arrayUnion([
+  //           // "mediaUrl":
+  //           mediaUrl,
+  //           // "mediaType": "image", // Could be dynamic if you support video
+  //           // "timestamp": DateTime.now(),
+  //           // "viewedBy": []
+  //         ])
+  //       }, SetOptions(merge: true));
+
+  //       print("Story uploaded successfully");
+  //     } else {
+  //       print("No image selected");
+  //     }
+  //   } catch (e) {
+  //     print("Failed to upload story: $e");
+  //   }
+  // }
 }

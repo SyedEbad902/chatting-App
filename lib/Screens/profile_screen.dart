@@ -38,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.only(
                           top: 30, left: 15, right: 15, bottom: 20),
                       child: imageProvider.isloading
-                          ? Column(
+                          ? Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -47,21 +47,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         0.1,
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.only(
-                                      // left: 20,
-                                      bottom: 30,
-                                    ),
+                                    padding: const EdgeInsets.all(8),
                                     child: const Text(
                                       "Setting Up Your Profile",
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 30,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  const Center(
-                                    child: CircularProgressIndicator(),
-                                  )
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  CircularProgressIndicator()
                                 ])
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       }
                                     },
                                     child: CircleAvatar(
-                                      radius: 65,
+                                      radius: 70,
                                       backgroundImage: selectedImage != null
                                           ? FileImage(selectedImage!)
                                           : const AssetImage(
@@ -165,7 +163,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               nameController.text,
                                               context);
                                         }
-
                                         nameController.clear();
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -182,12 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ),
-                                ]
-                                )
-                                )
-                ]
-                )
-                )
-                );
+                                ]))
+                ])));
   }
 }

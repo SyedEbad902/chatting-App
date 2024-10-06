@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// ignore: constant_identifier_names
 enum MessageType { Text, Image }
 
 class Message {

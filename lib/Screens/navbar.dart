@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:chatapp/Screens/call_screen.dart';
 import 'package:chatapp/Screens/home_screen.dart';
 import 'package:chatapp/Screens/stories_screen.dart';
+import 'package:chatapp/Screens/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,11 +20,12 @@ class _MyNavBarState extends State<MyNavBar> {
     const MessageScreen(),
     const StoriesScreen(),
     const CallScreen(),
-    const Scaffold(),
+    const UpdateProfile(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         elevation: 1,

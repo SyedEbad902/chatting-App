@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:chatapp/Screens/login_screen.dart';
+import 'package:chatapp/Services/getuser_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,14 +23,17 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), ()  {
+    // Future.microtask(() {
+    //   Provider.of<GetuserService>(context, listen: false).getCurrentUserProfile();
+    // });
+    Timer(const Duration(seconds: 3), () {
       // bool isLoggedIn =  await whereToGo();
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
                   // isLoggedIn ? MessageScreen() :
-                const LoginScreen()));
+                  const LoginScreen()));
     });
   }
 

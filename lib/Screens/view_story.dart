@@ -42,7 +42,7 @@ class _StoryPageState extends State<StoryPage> {
           controller: _storyController,
           url: url,
           imageFit: BoxFit.contain,
-          duration: Duration(seconds: 5),
+          duration: const Duration(seconds: 5),
           // caption: "Story from ${widget.userName}",
         );
       }).toList();
@@ -69,7 +69,7 @@ class _StoryPageState extends State<StoryPage> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(top: 24, left: 18, right: 18),
+        padding: const EdgeInsets.only(top: 24, left: 18, right: 18),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
@@ -81,9 +81,9 @@ class _StoryPageState extends State<StoryPage> {
               ),
               title: Text(
                 widget.userName,
-                style: TextStyle(fontSize: 20, color: Colors.white),
+                style: const TextStyle(fontSize: 20, color: Colors.white),
               ),
-              subtitle: Text("2 hrs ago",
+              subtitle: const Text("2 hrs ago",
                   style: TextStyle(fontSize: 15, color: Colors.white)),
             ),
           ),

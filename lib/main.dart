@@ -2,7 +2,9 @@ import 'package:chatapp/Screens/splash_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/calling_service.dart';
 import 'package:chatapp/Services/database_service.dart';
+import 'package:chatapp/Services/getuser_service.dart';
 import 'package:chatapp/Services/image_picker_service.dart';
+import 'package:chatapp/Services/toast_service.dart';
 import 'package:chatapp/Services/validation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +13,11 @@ import 'package:provider/provider.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
-
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   await Firebase.initializeApp();
-final navigatorKey = GlobalKey<NavigatorState>();
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
@@ -26,17 +26,18 @@ final navigatorKey = GlobalKey<NavigatorState>();
     ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
       [ZegoUIKitSignalingPlugin()],
     );
-  runApp( MyApp(navigatorKey: navigatorKey));
-});}
+    runApp(MyApp(navigatorKey: navigatorKey));
+  });
+}
 
 final getIt = GetIt.instance;
 
 void setupLocator() {
-  
   getIt.registerLazySingleton<FirebaseAuthService>(() => FirebaseAuthService());
   getIt.registerLazySingleton<DatabaseServiceProvider>(
       () => DatabaseServiceProvider());
   getIt.registerLazySingleton<ImagePickerService>(() => ImagePickerService());
+  getIt.registerLazySingleton<ToastService>(() => ToastService());
 }
 
 // Future<bool> whereToGo() async {
@@ -45,11 +46,10 @@ void setupLocator() {
 // }
 
 class MyApp extends StatefulWidget {
-    final GlobalKey<NavigatorState>  navigatorKey;
+  final GlobalKey<NavigatorState> navigatorKey;
   const MyApp({
-      required this.navigatorKey,
-          super.key,
-
+    required this.navigatorKey,
+    super.key,
   });
 
   @override
@@ -67,10 +67,11 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => ImagePickerService()),
           ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
           ChangeNotifierProvider(create: (_) => CallingService()),
+          ChangeNotifierProvider(create: (_) => ToastService()),
+          // ChangeNotifierProvider(create: (_) => GetuserService()),
         ],
-        child:  MaterialApp(
-      navigatorKey: widget.navigatorKey,
-
+        child: MaterialApp(
+          navigatorKey: widget.navigatorKey,
           debugShowCheckedModeBanner: false,
           home: const SplashScreen(),
         ));

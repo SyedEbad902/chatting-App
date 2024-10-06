@@ -1,6 +1,5 @@
 import 'package:chatapp/Screens/signup_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
-import 'package:chatapp/Services/calling_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,29 +11,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // signinUser(String emailAddress, String password) async {
-  //   try {
-  //     final credential = await FirebaseAuth.instance
-  //         .signInWithEmailAndPassword(email: emailAddress, password: password);
-  //     Navigator.push(context,
-  //         MaterialPageRoute(builder: (context) => const MessageScreen()));
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'user-not-found') {
-  //       print('No user found for that email.');
-  //     } else if (e.code == 'wrong-password') {
-  //       print('Wrong password provided for that user.');
-  //     }
-  //   }
-  // }
-
-  // String? code = '+92';
+ 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  // final _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthService>(context);
-    final callProvider = Provider.of<CallingService>(context);
+    // final callProvider = Provider.of<CallingService>(context);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 20, 20),
       body: SingleChildScrollView(
@@ -171,8 +157,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           //     await SharedPreferences.getInstance();
                           // await prefs.setBool('isLoggedIn', true);
                           // print(number);
-                          authProvider.signinUser(emailController.text,
-                              passwordController.text, context);
+                          authProvider.signinUser(emailController.text.trim(),
+                              passwordController.text.trim(), context);
                           // callProvider.getAllCalls();
                           //     .then((value) {
                           //   authProvider.onUserLogin();

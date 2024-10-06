@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chatapp/Screens/login_screen.dart';
 import 'package:chatapp/Screens/navbar.dart';
 import 'package:chatapp/Screens/profile_screen.dart';
+import 'package:chatapp/Services/toast_service.dart';
+import 'package:chatapp/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +12,11 @@ import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class FirebaseAuthService extends ChangeNotifier {
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final credential = FirebaseAuth.instance;
+  final toastProvider = getIt<ToastService>();
+  String? _errorMessage;
+
   Map<String, dynamic>? userProfileMap = {};
 
   Future<bool> checkIfUserExists(String currentUserUid) async {
@@ -32,23 +39,32 @@ class FirebaseAuthService extends ChangeNotifier {
       if (userExists) {
         userProfileMap?.clear();
         await getCurrentUserProfile();
-        onUserLogin();
-
-        Navigator.push(
+        toastProvider.DelightToast(
+                text: "Loggedin Successfully",
+                icon: Icons.done,
+                circleColor: Colors.lightGreen,
+                iconColor: Colors.white,
+                context: context)
+            .show(context);
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const MyNavBar()));
+        onUserLogin();
       } else {
         onUserLogin();
 
-        Navigator.push(context,
+        Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const ProfileScreen()));
       }
     } on FirebaseAuthException catch (e) {
-      print(e);
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      _errorMessage = e.message;
+      notifyListeners();
+      toastProvider.DelightToast(
+              text: _errorMessage!,
+              icon: Icons.cancel,
+              circleColor: Colors.white,
+              iconColor: Colors.red,
+              context: context)
+          .show(context);
     }
   }
 
@@ -75,16 +91,30 @@ class FirebaseAuthService extends ChangeNotifier {
         email: email,
         password: password,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Signup Successful')),
-      );
+      toastProvider.DelightToast(
+              text: "Signup Successful",
+              icon: Icons.done,
+              circleColor: Colors.lightGreen,
+              iconColor: Colors.white,
+              context: context)
+          .show(context);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text('Signup Successful')),
+      // );
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const LoginScreen()));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        toastProvider.DelightToast(
+                text: 'This email is already in use',
+                icon: Icons.cancel,
+                circleColor: Colors.white,
+                iconColor: Colors.red,
+                context: context)
+            .show(context);
+        // print('The account already exists for that email.');
       }
     } catch (e) {
       print(e);
@@ -113,16 +143,16 @@ class FirebaseAuthService extends ChangeNotifier {
     }
   }
 
-  // Stream of all users except the currently logged-in user
-  // Stream<QuerySnapshot<Map<String, dynamic>>> getUserProfiles() {
-  //          final String currentUserUid = credential.currentUser!.uid;
+ // Stream of all users except the currently logged-in user
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserProfiles() {
+           final String currentUserUid = credential.currentUser!.uid;
 
-  //   return _firestore
-  //       .collection('users')
-  //       .where('uid',
-  //           isNotEqualTo: currentUserUid) // Exclude the current user's profile
-  //       .snapshots();
-  // }
+    return _firestore
+        .collection('users')
+        .where('uid',
+            isNotEqualTo: currentUserUid) // Exclude the current user's profile
+        .snapshots();
+  }
 
   void onUserLogin() {
     /// 1.2.1. initialized ZegoUIKitPrebuiltCallInvitationService
@@ -133,7 +163,8 @@ class FirebaseAuthService extends ChangeNotifier {
       appSign:
           "96e4ea6eb8c59732dddaa6b832a30920fa30f3688c6976674b60cbbbe1bdf7a4" /*input your AppSign*/,
       userID: credential.currentUser!.uid,
-      userName: userProfileMap!["imageName"],
+      userName:
+       userProfileMap!["imageName"],
       plugins: [ZegoUIKitSignalingPlugin()],
       notificationConfig: ZegoCallInvitationNotificationConfig(
         androidNotificationConfig: ZegoCallAndroidNotificationConfig(

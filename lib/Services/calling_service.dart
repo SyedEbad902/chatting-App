@@ -53,6 +53,5 @@ class CallingService extends ChangeNotifier {
     // Formatting to a more readable format
     String formattedDate = DateFormat('MMM d, yyyy – kk:mm').format(dateTime);
     return formattedDate;
-    print(formattedDate); // Example: 2024-10-04 – 03:10
   }
 }

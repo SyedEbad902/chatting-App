@@ -14,6 +14,8 @@ class StoriesScreen extends StatefulWidget {
 }
 
 class _StoriesScreenState extends State<StoriesScreen> {
+  Map<String, dynamic> userStories = {};
+
   @override
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImagePickerService>(context);
@@ -27,12 +29,7 @@ class _StoriesScreenState extends State<StoriesScreen> {
             String userProfilePic = userProfile["imageUrl"];
             print(userProfile);
             await imageProvider.pickAndUploadStory(
-                userId, userName, userProfilePic);
-            imageProvider.DelightToast(
-                text: "Story Uploaded",
-                icon: Icons.done,
-                circleColor: Colors.lightGreen,
-                iconColor: Colors.white);
+                userId, userName, userProfilePic, context);
           },
           child: const Icon(Icons.add),
         ),
@@ -86,72 +83,104 @@ class _StoriesScreenState extends State<StoriesScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: StreamBuilder(
-                        stream: imageProvider.getStories(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                                child: const CircularProgressIndicator());
-                          }
-
-                          List<DocumentSnapshot> documents =
-                              snapshot.data!.docs;
-                          return ListView.separated(
-                            separatorBuilder: (context, index) {
-                              return Divider(
-                                endIndent: 7,
-                                indent: 7,
-                                thickness: 1,
-                              );
-                            },
-                            itemCount: documents.length,
-                            itemBuilder: (context, index) {
-                              var storyData = documents[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => StoryPage(
-                                                userName: storyData["userName"],
-                                                imageUrls: storyData["stories"],
-                                                userProfileImage:
-                                                    storyData["profilePicture"],
-                                              )));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListTile(
-                                    leading: StatusView(
-                                      radius: 28,
-                                      spacing: 15,
-                                      strokeWidth: 2,
-                                      indexOfSeenStatus: 0,
-                                      numberOfStatus:
-                                          storyData["stories"].length,
-                                      padding: 4,
-                                      centerImageUrl:
-                                          storyData["profilePicture"],
-                                      seenColor: Colors.grey,
-                                      unSeenColor: Colors.red,
-                                    ),
-                                    title: Text(
-                                      storyData["userId"] ==
-                                              authProvider
-                                                  .userProfileMap!['uid']
-                                          ? "You"
-                                          : storyData["userName"],
-                                      style: const TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                      child: imageProvider.isUploading
+                          ? const Center(
+                              child: Row(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                              ); // Custom widget to display stories
-                            },
-                          );
-                        },
-                      ),
+                                  Text("Uploading your story")
+                                ],
+                              ),
+                            )
+                          : StreamBuilder(
+                              stream: imageProvider.getStories(),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                }
+
+                                List<DocumentSnapshot> documents =
+                                    snapshot.data!.docs;
+                                for (var doc in documents) {
+                                  var storyData =
+                                      doc.data() as Map<String, dynamic>;
+                                  if (storyData['userId'] ==
+                                      authProvider.userProfileMap!['uid']) {
+                                    userStories =
+                                        storyData; // Add the story to the map
+                                  }
+                                  print(userStories);
+                                }
+                                return ListView.separated(
+                                  separatorBuilder: (context, index) {
+                                    return const Divider(
+                                      endIndent: 7,
+                                      indent: 7,
+                                      thickness: 1,
+                                    );
+                                  },
+                                  itemCount: documents.length,
+                                  itemBuilder: (context, index) {
+                                    var storyData = documents[index];
+                                    Timestamp timestamp =
+                                        storyData["timestamp"];
+
+                                    String time =
+                                        imageProvider.formatDate(timestamp);
+                                    print(time);
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => StoryPage(
+                                                      userName:
+                                                          storyData["userName"],
+                                                      imageUrls:
+                                                          storyData["stories"],
+                                                      userProfileImage:
+                                                          storyData[
+                                                              "profilePicture"],
+                                                    )));
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ListTile(
+                                          leading: StatusView(
+                                            radius: 28,
+                                            spacing: 15,
+                                            strokeWidth: 2,
+                                            indexOfSeenStatus: 0,
+                                            numberOfStatus:
+                                                storyData["stories"].length,
+                                            padding: 4,
+                                            centerImageUrl:
+                                                storyData["profilePicture"],
+                                            seenColor: Colors.grey,
+                                            unSeenColor: Colors.red,
+                                          ),
+                                          title: Text(
+                                            storyData["userId"] ==
+                                                    authProvider
+                                                        .userProfileMap!['uid']
+                                                ? "You"
+                                                : storyData["userName"],
+                                            style: const TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: Text("$time"),
+                                        ),
+                                      ),
+                                    ); // Custom widget to display stories
+                                  },
+                                );
+                              },
+                            ),
                     ));
               })
         ]));

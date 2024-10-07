@@ -46,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color(0xff414A4C),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
@@ -204,26 +204,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  // void addCallDataToFirestore(String resourceID, String inviterID,
-  //     List<String> invitees, bool isVideo) async {
-  //   try {
-  //     String chatId = databaseservice.generateChatId(
-  //         uid1: currentUser!.id, uid2: otherUser!.id);
-  //     await FirebaseFirestore.instance.collection('call_invitations').doc(chatId).update(
-  //       {
-  //          'calls': FieldValue.arrayUnion([{
-  //         'callerID': currentUser!.firstName,
-  //         'inviteeIDs': otherUser!.firstName,
-  //         'isVideoCall': isVideo,
-  //         'timestamp': FieldValue.serverTimestamp(),
-  //          }]),
-  //       },
-  //     );
-  //     print("Call data added to Firestore successfully!");
-  //   } catch (e) {
-  //     print("Error adding call data to Firestore: $e");
-  //   }
-  // }
+  
 
   Future<void> sendMessage(ChatMessage chatMessage) async {
     String? currentTime = await databaseservice.getCurrentTimeFromInternet();

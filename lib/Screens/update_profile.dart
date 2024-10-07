@@ -74,7 +74,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color.fromRGBO(20, 20, 20, 1),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: loadData
             ? SizedBox(
                 height: MediaQuery.of(context).size.height,
@@ -164,13 +164,29 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                             });
                                           }
                                         },
-                                        child: CircleAvatar(
-                                          radius: 70,
-                                          backgroundImage: selectedImage != null
-                                              ? FileImage(selectedImage!)
-                                              : CachedNetworkImageProvider(
-                                                  // authProvider
-                                                  userProfileMap!["imageUrl"]),
+                                        child: Container(
+                                          padding: EdgeInsets.all(5),
+                                          width:
+                                              170, // Set the size of the avatar
+                                          height: 170,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color:
+                                                  Colors.white, // Border color
+                                              width: 4.0, // Border width
+                                            ),
+                                          ),
+                                          child: CircleAvatar(
+                                            radius: 70,
+                                            backgroundImage: selectedImage !=
+                                                    null
+                                                ? FileImage(selectedImage!)
+                                                : CachedNetworkImageProvider(
+                                                    // authProvider
+                                                    userProfileMap![
+                                                        "imageUrl"]),
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(

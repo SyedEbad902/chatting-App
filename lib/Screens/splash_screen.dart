@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:chatapp/Screens/login_screen.dart';
-import 'package:chatapp/Services/getuser_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
+import 'package:page_route_animator/page_route_animator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,24 +22,30 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Future.microtask(() {
-    //   Provider.of<GetuserService>(context, listen: false).getCurrentUserProfile();
-    // });
+
     Timer(const Duration(seconds: 3), () {
-      // bool isLoggedIn =  await whereToGo();
       Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  // isLoggedIn ? MessageScreen() :
-                  const LoginScreen()));
+          PageRouteAnimator(
+            child: const LoginScreen(),
+            routeAnimation: RouteAnimation.fadeAndScale,
+            settings: const RouteSettings(),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          ));
+
+      // Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (context) =>
+      //             const LoginScreen()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,

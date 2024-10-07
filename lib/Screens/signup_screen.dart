@@ -139,7 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+      backgroundColor: Color.fromARGB(255, 36, 36, 36),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,

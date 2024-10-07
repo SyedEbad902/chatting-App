@@ -3,6 +3,8 @@ import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/image_picker_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:status_view/status_view.dart';
 
@@ -31,9 +33,14 @@ class _StoriesScreenState extends State<StoriesScreen> {
             await imageProvider.pickAndUploadStory(
                 userId, userName, userProfilePic, context);
           },
-          child: const Icon(Icons.add),
+          backgroundColor: Color.fromARGB(255, 36, 36, 36),
+          child: SvgPicture.asset(
+            "assets/images/add-icon.svg",
+            color: Colors.white,
+            height: 55,
+          ),
         ),
-        backgroundColor: const Color(0xff414A4C),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
@@ -84,14 +91,22 @@ class _StoriesScreenState extends State<StoriesScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: imageProvider.isUploading
-                          ? const Center(
+                          ? Center(
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(
-                                    width: 10,
+                                  const Text(
+                                    "Uploading your story",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  Text("Uploading your story")
+
+                                  Lottie.asset("assets/images/new-loader1.json",
+                                      height: 50, width: 60),
+
+                                  // CircularProgressIndicator(),
                                 ],
                               ),
                             )

@@ -62,7 +62,7 @@ class _MessageScreenState extends State<MessageScreen> {
     final databaseProvider = Provider.of<DatabaseServiceProvider>(context);
     final authProvider = Provider.of<FirebaseAuthService>(context);
     return Scaffold(
-        backgroundColor: const Color(0xff414A4C),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
@@ -106,11 +106,9 @@ class _MessageScreenState extends State<MessageScreen> {
                 )
               ])),
           DraggableScrollableSheet(
-              initialChildSize: 0.8, // 30% of the screen height
-              minChildSize:
-                  0.8, // Minimum size (fixed at 30% of the screen height)
-              maxChildSize:
-                  0.8, // Maximum size (fixed at 30% of the screen height)
+              initialChildSize: 0.8,
+              minChildSize: 0.8,
+              maxChildSize: 0.8,
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
@@ -189,7 +187,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                       },
                                       child: ListTile(
                                         leading: CircleAvatar(
-                                          radius: 30,
+                                          radius: 28,
                                           backgroundImage:
                                               CachedNetworkImageProvider(
                                             userProfiles[index]["imageUrl"]!,

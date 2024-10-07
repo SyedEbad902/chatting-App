@@ -46,10 +46,10 @@ class ValidationProvider extends ChangeNotifier {
     if (value == null || value.isEmpty) {
       // return 'Please enter a password';
     }
-    if (value!.length < 6) {
+    if (value!.length < 8) {
       // return 'Password must be at least 6 characters';
       toastProvider.DelightToast(
-              text: "Password must be at least 6 characters",
+              text: "Password must be at least 8 characters",
               icon: Icons.cancel,
               circleColor: Colors.white,
               iconColor: Colors.red,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chatapp/Services/image_picker_service.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final imageProvider = Provider.of<ImagePickerService>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: const Color.fromRGBO(20, 20, 20, 1),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -59,7 +60,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  CircularProgressIndicator()
+                                  // CircularProgressIndicator()
+                                  Lottie.asset("assets/images/new-loader2.json",
+                                      height: 50, width: 60),
                                 ])
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,12 +95,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         });
                                       }
                                     },
-                                    child: CircleAvatar(
-                                      radius: 70,
-                                      backgroundImage: selectedImage != null
-                                          ? FileImage(selectedImage!)
-                                          : const AssetImage(
-                                              'assets/images/placeholder.png'),
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      width: 170, // Set the size of the avatar
+                                      height: 170,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white, // Border color
+                                          width: 4.0, // Border width
+                                        ),
+                                      ),
+                                      child: CircleAvatar(
+                                        radius: 70,
+                                        backgroundImage: selectedImage != null
+                                            ? FileImage(selectedImage!)
+                                            : const AssetImage(
+                                                'assets/images/placeholder.png'),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(

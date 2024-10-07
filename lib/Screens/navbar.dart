@@ -16,154 +16,192 @@ class MyNavBar extends StatefulWidget {
 
 class _MyNavBarState extends State<MyNavBar> {
   int currentIndex = 0;
-  List screens = [
+  List<Widget> screens = [
     const MessageScreen(),
     const StoriesScreen(),
     const CallScreen(),
     const UpdateProfile(),
   ];
+  var pageController = PageController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: BottomAppBar(
         elevation: 1,
-        height: 80,
+        height: MediaQuery.of(context).size.height * 0.1,
         color: Colors.white,
         clipBehavior: Clip.antiAliasWithSaveLayer,
-        child: Row(
-          // mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      currentIndex = 0;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                    'assets/images/message-icon.svg',
-                    height: 28,
-                    width: 28,
-                    color: currentIndex == 0
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 5, right: 5),
+          child: Row(
+            // mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 0;
+                        pageController.animateToPage(currentIndex,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.fastEaseInToSlowEaseOut);
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/message-icon.svg',
+                      height: 28,
+                      width: 28,
+                      color: currentIndex == 0
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
 
-                    // color: Colors.amber,
+                      // color: Colors.amber,
+                    ),
                   ),
-                ),
-                Text(
-                  "Message",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: currentIndex == 0
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+                  SizedBox(
+                    height: 2,
                   ),
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      currentIndex = 1;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                    'assets/images/search-icon.svg',
-                    height: 28,
-                    width: 28,
-                    color: currentIndex == 1
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+                  Text(
+                    "Chats",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: currentIndex == 0
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 1;
+                        pageController.animateToPage(currentIndex,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/story-icon.svg',
+                      height: 28,
+                      width: 28,
+                      color: currentIndex == 1
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
 
-                    // color: Colors.amber,
+                      // color: Colors.amber,
+                    ),
                   ),
-                ),
-                Text(
-                  "Search",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: currentIndex == 1
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+                  SizedBox(
+                    height: 2,
                   ),
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      currentIndex = 2;
-                    });
-                  },
-                  child: SvgPicture.asset(
-                    'assets/images/call-icon.svg',
-                    height: 28,
-                    width: 28,
-                    color: currentIndex == 2
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+                  Text(
+                    "Stories",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: currentIndex == 1
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 2;
+                        pageController.animateToPage(currentIndex,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/call-icon.svg',
+                      height: 28,
+                      width: 28,
+                      color: currentIndex == 2
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
+                    ),
                   ),
-                ),
-                Text(
-                  "Calls",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: currentIndex == 2
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+                  SizedBox(
+                    height: 2,
                   ),
-                )
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              // mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      currentIndex = 3;
-                    });
-                  },
-                  child: Icon(
-                    Icons.person,
-                    size: 28,
-                    color: currentIndex == 3
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
+                  Text(
+                    "Calls",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: currentIndex == 2
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentIndex = 3;
+                        pageController.animateToPage(currentIndex,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                      });
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/profile-icon.svg',
+                      height: 30,
+                      width: 30,
+                      color: currentIndex == 3
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
+
+                      // color: Colors.amber,
+                    ),
                   ),
-                ),
-                Text(
-                  "Profile",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w900,
-                    color: currentIndex == 3
-                        ? Colors.black
-                        : const Color.fromARGB(255, 129, 129, 129),
-                  ),
-                )
-              ],
-            ),
-          ],
+                  Text(
+                    "Profile",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                      color: currentIndex == 3
+                          ? Colors.black
+                          : const Color.fromARGB(255, 129, 129, 129),
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-      body: screens[currentIndex],
+      body: PageView(
+        children: screens,
+        controller: pageController,
+        onPageChanged: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
+      ),
+      //  screens[currentIndex],
     );
   }
 }

@@ -11,18 +11,16 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
- 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   // final _formKey = GlobalKey<FormState>();
-
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthService>(context);
     // final callProvider = Provider.of<CallingService>(context);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+      backgroundColor: Color.fromARGB(255, 36, 36, 36),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,

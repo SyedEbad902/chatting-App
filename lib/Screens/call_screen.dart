@@ -2,6 +2,7 @@ import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/calling_service.dart';
 import 'package:chatapp/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class CallScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _CallScreenState extends State<CallScreen> {
     final authProvider = getIt<FirebaseAuthService>();
 
     return Scaffold(
-        backgroundColor: const Color(0xff414A4C),
+        backgroundColor: Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
@@ -48,15 +49,6 @@ class _CallScreenState extends State<CallScreen> {
                             fontWeight: FontWeight.w700,
                             color: Colors.white),
                       ),
-                      // GestureDetector(
-                      //     onTap: () {
-                      //       authProvider.signOut(context);
-                      //     },
-                      //     child: const Icon(
-                      //       Icons.logout_outlined,
-                      //       size: 25,
-                      //       color: Colors.white,
-                      //     )),
                     ],
                   ),
                 )
@@ -83,11 +75,13 @@ class _CallScreenState extends State<CallScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             }
 
                             if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                              return const Center(child: Text("No call logs found"));
+                              return const Center(
+                                  child: Text("No call logs found"));
                             }
 
                             // List<Map<String, dynamic>> calls = snapshot.data!;
@@ -115,13 +109,21 @@ class _CallScreenState extends State<CallScreen> {
                                     isOutgoing ? '$otherUser' : '$otherUser';
                                 return ListTile(
                                   leading: CircleAvatar(
-                                      backgroundColor: Colors.grey,
-                                      radius: 23,
-                                      child: Icon(
-                                          call['isVideoCall']
-                                              ? Icons.video_call
-                                              : Icons.call,
-                                          size: 25)),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 36, 36, 36),
+                                      radius: 28,
+                                      child: call['isVideoCall']
+                                          ? SvgPicture.asset(
+                                              "assets/images/videocall.svg",
+                                              height: 28,
+                                              width: 28,
+                                              color: Colors.white,
+                                            )
+                                          : Icon(
+                                              Icons.call,
+                                              size: 27,
+                                              color: Colors.white,
+                                            )),
                                   title: Text(
                                     text,
                                     style: const TextStyle(

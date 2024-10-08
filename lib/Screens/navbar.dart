@@ -48,7 +48,7 @@ class _MyNavBarState extends State<MyNavBar> {
                       setState(() {
                         currentIndex = 0;
                         pageController.animateToPage(currentIndex,
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.fastEaseInToSlowEaseOut);
                       });
                     },
@@ -63,7 +63,7 @@ class _MyNavBarState extends State<MyNavBar> {
                       // color: Colors.amber,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
                   Text(
@@ -86,7 +86,7 @@ class _MyNavBarState extends State<MyNavBar> {
                       setState(() {
                         currentIndex = 1;
                         pageController.animateToPage(currentIndex,
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       });
                     },
@@ -101,7 +101,7 @@ class _MyNavBarState extends State<MyNavBar> {
                       // color: Colors.amber,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
                   Text(
@@ -124,7 +124,7 @@ class _MyNavBarState extends State<MyNavBar> {
                       setState(() {
                         currentIndex = 2;
                         pageController.animateToPage(currentIndex,
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       });
                     },
@@ -137,7 +137,7 @@ class _MyNavBarState extends State<MyNavBar> {
                           : const Color.fromARGB(255, 129, 129, 129),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
                   Text(
@@ -161,7 +161,7 @@ class _MyNavBarState extends State<MyNavBar> {
                       setState(() {
                         currentIndex = 3;
                         pageController.animateToPage(currentIndex,
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       });
                     },

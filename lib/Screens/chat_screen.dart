@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -42,21 +44,18 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final databaseProvider = Provider.of<DatabaseServiceProvider>(context);
-
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
-              // decoration: BoxDecoration(border: Border(bottom: Bo)),
               width: double.infinity,
               child: Stack(fit: StackFit.expand, children: [
                 Image.asset(
-                  'assets/images/login-background.png', // Replace with your image path
+                  'assets/images/login-background.png', 
                   fit: BoxFit
-                      .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                      .cover,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -91,11 +90,11 @@ class _ChatScreenState extends State<ChatScreen> {
                 )
               ])),
           DraggableScrollableSheet(
-              initialChildSize: 0.83, // 30% of the screen height
+              initialChildSize: 0.83, 
               minChildSize:
-                  0.83, // Minimum size (fixed at 30% of the screen height)
+                  0.83, 
               maxChildSize:
-                  0.83, // Maximum size (fixed at 30% of the screen height)
+                  0.83,
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
@@ -119,7 +118,6 @@ class _ChatScreenState extends State<ChatScreen> {
                           builder: (BuildContext context, snapshot) {
                             final chat = snapshot.data;
                             List<ChatMessage> messages = [];
-                            // print(chat!["messages"]);
                             if (chat != null && chat["messages"] != null) {
                               messages =
                                   generateChatMessageList(chat["messages"]);
@@ -153,9 +151,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                 onSend: sendMessage,
                                 messages: messages);
                           },
-                        )));
-              }),
-        ]));
+                        )
+                      )
+                    );
+              }
+            ),
+        ]
+      )
+    );
   }
 
   ZegoSendCallInvitationButton callingButton(bool isVideo) {
@@ -164,9 +167,9 @@ class _ChatScreenState extends State<ChatScreen> {
       onWillPressed: () async {
         try {
           String? getTime = await databaseservice.getCurrentTimeFromInternet();
+          // ignore: unused_local_variable
           String chatId = databaseservice.generateChatId(
               uid1: currentUser!.id, uid2: otherUser!.id);
-          // Perform Firestore operation before sending the call invitation
           await FirebaseFirestore.instance
               .collection('call_invitations')
               .doc(authservice.userProfileMap!["uid"])
@@ -184,11 +187,9 @@ class _ChatScreenState extends State<ChatScreen> {
           }, SetOptions(merge: true));
           print('Call data added to Firestore successfully');
 
-          // Returning true allows the call to proceed
           return true;
         } catch (e) {
           print('Error adding call data to Firestore: $e');
-          // Returning false cancels the call if there's an error
           return false;
         }
       },
@@ -210,7 +211,6 @@ class _ChatScreenState extends State<ChatScreen> {
     String? currentTime = await databaseservice.getCurrentTimeFromInternet();
     DateTime parsedTime = DateTime.parse(currentTime!);
 
-    // Convert the `DateTime` to Firestore Timestamp
     Timestamp timeStamp = Timestamp.fromDate(parsedTime);
 
     Message message = Message(
@@ -229,23 +229,19 @@ class _ChatScreenState extends State<ChatScreen> {
           text: m["content"],
           createdAt: m["sentAt"]!.toDate());
     }).toList();
-    // chatMessage.sort((a, b) {
-    //   return b.createdAt.compareTo(a.createdAt);
-    // });
+    
     chatMessage.sort((a, b) {
       DateTime dateA = parseDateTime(a.createdAt.toString());
       DateTime dateB = parseDateTime(b.createdAt.toString());
 
-      return dateB.compareTo(dateA); // Sorting in descending order
+      return dateB.compareTo(dateA); 
     });
     return chatMessage;
   }
 
-// Function to parse date from string
   DateTime parseDateTime(String dateString) {
     dateString = dateString.replaceFirst(' at ', ' UTC+');
 
-    // Try parsing the string as an ISO 8601 date with microseconds
     return DateTime.parse(dateString);
   }
 }

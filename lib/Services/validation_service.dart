@@ -36,18 +36,15 @@ class ValidationProvider extends ChangeNotifier {
               iconColor: Colors.red,
               context: context)
           .show(context);
-      // return 'Enter a valid email address';
     }
     return null;
   }
 
-  // Helper function to validate password strength
+  //  function to validate password strength
   String? _validatePassword(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      // return 'Please enter a password';
     }
     if (value!.length < 8) {
-      // return 'Password must be at least 6 characters';
       toastProvider.DelightToast(
               text: "Password must be at least 8 characters",
               icon: Icons.cancel,
@@ -59,11 +56,10 @@ class ValidationProvider extends ChangeNotifier {
     return null;
   }
 
-  // Helper function to confirm password match
+  //  function to confirm password match
   String? _validateConfirmPassword(
       String password, String confirmPassword, BuildContext context) {
     if (confirmPassword.isEmpty) {
-      // return 'Please confirm your password';
       toastProvider.DelightToast(
               text: "Please confirm your password",
               icon: Icons.cancel,
@@ -72,7 +68,6 @@ class ValidationProvider extends ChangeNotifier {
               context: context)
           .show(context);
     } else if (password != confirmPassword) {
-      // return 'Passwords do not match';
       toastProvider.DelightToast(
               text: "Passwords do not match",
               icon: Icons.cancel,
@@ -93,14 +88,7 @@ class ValidationProvider extends ChangeNotifier {
   String? _confirmPasswordError;
   String? get confirmPasswordError => _confirmPasswordError;
 
-  // void _submitForm() {
-  //   setState(() {
-  //     // Manually validate the password when the user submits the form
-  //     _passwordError = _validatePassword(_passwordController.text);
-  //     _emailError = _validatePassword(_passwordController.text);
-  //     _confirmPasswordError = _validatePassword(_passwordController.text);
-  //   });
-  // }
+
   void submitForm(BuildContext context) {
     final authProvider =
         Provider.of<FirebaseAuthService>(context, listen: false);
@@ -115,7 +103,6 @@ class ValidationProvider extends ChangeNotifier {
               context: context)
           .show(context);
     } else {
-      // Manually validate the fields
       _emailError = _validateEmail(_emailController.text, context);
       _passwordError = _validatePassword(_passwordController.text, context);
       _confirmPasswordError = _validateConfirmPassword(
@@ -123,7 +110,6 @@ class ValidationProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    // If all fields are valid, show SnackBar
     if (_emailError == null &&
         _passwordError == null &&
         _confirmPasswordError == null) {

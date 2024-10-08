@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           PageRouteAnimator(
             child: const LoginScreen(),
@@ -34,29 +34,24 @@ class _SplashScreenState extends State<SplashScreen> {
             curve: Curves.easeOut,
           ));
 
-      // Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) =>
-      //             const LoginScreen()));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Stack(
                 fit: StackFit
-                    .expand, // This makes the image cover the entire screen
+                    .expand,
                 children: [
                   Image.asset(
-                    'assets/images/login-background.png', // Replace with your image path
+                    'assets/images/login-background.png', 
                     fit: BoxFit
-                        .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                        .cover,
                   ),
                   Padding(
                       padding: const EdgeInsets.only(

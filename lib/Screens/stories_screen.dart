@@ -33,24 +33,23 @@ class _StoriesScreenState extends State<StoriesScreen> {
             await imageProvider.pickAndUploadStory(
                 userId, userName, userProfilePic, context);
           },
-          backgroundColor: Color.fromARGB(255, 36, 36, 36),
+          backgroundColor: const Color.fromARGB(255, 36, 36, 36),
           child: SvgPicture.asset(
             "assets/images/add-icon.svg",
             color: Colors.white,
             height: 55,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
-              // decoration: BoxDecoration(border: Border(bottom: Bo)),
               width: double.infinity,
               child: Stack(fit: StackFit.expand, children: [
                 Image.asset(
-                  'assets/images/login-background.png', // Replace with your image path
+                  'assets/images/login-background.png',
                   fit: BoxFit
-                      .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                      .cover, 
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -73,11 +72,11 @@ class _StoriesScreenState extends State<StoriesScreen> {
                 )
               ])),
           DraggableScrollableSheet(
-              initialChildSize: 0.8, // 30% of the screen height
+              initialChildSize: 0.8, 
               minChildSize:
-                  0.8, // Minimum size (fixed at 30% of the screen height)
+                  0.8, 
               maxChildSize:
-                  0.8, // Maximum size (fixed at 30% of the screen height)
+                  0.8,
               builder:
                   (BuildContext context, ScrollController scrollController) {
                 return Container(
@@ -126,7 +125,7 @@ class _StoriesScreenState extends State<StoriesScreen> {
                                   if (storyData['userId'] ==
                                       authProvider.userProfileMap!['uid']) {
                                     userStories =
-                                        storyData; // Add the story to the map
+                                        storyData; 
                                   }
                                   print(userStories);
                                 }

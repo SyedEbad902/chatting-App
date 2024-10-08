@@ -13,33 +13,30 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  // final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<FirebaseAuthService>(context);
-    // final callProvider = Provider.of<CallingService>(context);
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 36, 36, 36),
+      backgroundColor: const Color.fromARGB(255, 36, 36, 36),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Stack(
             fit:
-                StackFit.expand, // This makes the image cover the entire screen
+                StackFit.expand,
             children: [
               Image.asset(
-                'assets/images/login-background.png', // Replace with your image path
+                'assets/images/login-background.png', 
                 fit: BoxFit
-                    .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                    .cover,
               ),
               Padding(
                 padding: const EdgeInsets.only(
                     top: 30, left: 15, right: 15, bottom: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.03,
@@ -49,16 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
-                    // SvgPicture.asset('assets/images/login.svg'),
-                    // const Align(
-                    //   alignment: Alignment.topLeft,
-                    //   child: Text(
-                    //       "Stay connected\nwith your friends\nand family",
-                    //       style: TextStyle(
-                    //           fontSize: 36,
-                    //           fontWeight: FontWeight.bold,
-                    //           color: Colors.white)),
-                    // ),
+                   
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.04,
                     ),
@@ -134,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               controller: passwordController,
                               decoration: const InputDecoration(
                                   border: InputBorder
-                                      .none, // Removes the bottom line
+                                      .none,
                                   hintText: 'Enter your Password',
                                   hintStyle: TextStyle(
                                       color: Colors.black, fontSize: 16)),
@@ -151,20 +139,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: MediaQuery.of(context).size.width * 0.85,
                       child: ElevatedButton(
                         onPressed: () async {
-                          // SharedPreferences prefs =
-                          //     await SharedPreferences.getInstance();
-                          // await prefs.setBool('isLoggedIn', true);
-                          // print(number);
+                         
                           authProvider.signinUser(emailController.text.trim(),
                               passwordController.text.trim(), context);
-                          // callProvider.getAllCalls();
-                          //     .then((value) {
-                          //   authProvider.onUserLogin();
-                          // });
-
-                          // print(emailController.text);
-                          // print(passwordController.text);
-                          // print('hello');
+                         
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
@@ -217,4 +195,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-// keytool -list -v \ -alias androiddebugkey -keystore %USERPROFILE%\.android\debug.keystore

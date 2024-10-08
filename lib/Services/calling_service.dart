@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 
 class CallingService extends ChangeNotifier {
   List<Map<String, dynamic>> allCalls = [];
+
+  //get all calls of the current user outgoing
   Future<List<Map<String, dynamic>>> getAllCalls() async {
     allCalls.clear();
 
@@ -14,7 +16,6 @@ class CallingService extends ChangeNotifier {
     String userId = authService.credential.currentUser!.uid;
     final dataBaseService = getIt<DatabaseServiceProvider>();
 
-    // Step 1: Fetch calls where the user is the caller (outgoing calls from their own doc)
     DocumentSnapshot userDoc = await dataBaseService.firestore
         .collection('call_invitations')
         .doc(userId)
@@ -24,8 +25,7 @@ class CallingService extends ChangeNotifier {
       List<dynamic> userCalls = userDoc['calls'];
       allCalls.addAll(userCalls.cast<Map<String, dynamic>>());
     }
-
-    // Step 2: Fetch calls where the user is the callee (incoming calls from other users)
+//get all  calls incomming
     QuerySnapshot otherUsersCalls =
         await dataBaseService.firestore.collection('call_invitations').get();
 
@@ -46,6 +46,7 @@ class CallingService extends ChangeNotifier {
     return allCalls;
   }
 
+//format date 
   formatDate(String timestamp) {
     DateTime dateTime = DateTime.parse(timestamp);
     dateTime = dateTime.toLocal();

@@ -10,148 +10,28 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  // createUser(String email, String password) async {
-  //   try {
-  //     final credential =
-  //         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       const SnackBar(content: Text('Signup Successful')),
-  //     );
-  //     Navigator.push(
-  //         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-  //   } on FirebaseAuthException catch (e) {
-  //     if (e.code == 'weak-password') {
-  //       print('The password provided is too weak.');
-  //     } else if (e.code == 'email-already-in-use') {
-  //       print('The account already exists for that email.');
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
+  
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers to get the text field values
-  // final _emailController = TextEditingController();
-  // final _passwordController = TextEditingController();
-  // final _confirmPasswordController = TextEditingController();
-
-  // String? _validateEmail(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please enter your email';
-  //   }
-  //   // Simple email validation pattern
-  //   String pattern = r'^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+.[a-zA-Z]{2,4}$';
-  //   RegExp regex = RegExp(pattern);
-  //   if (!regex.hasMatch(value)) {
-  //     return 'Enter a valid email address';
-  //   }
-  //   return null;
-  // }
-
-  // // Helper function to validate password strength
-  // String? _validatePassword(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Please enter a password';
-  //   }
-  //   if (value.length < 6) {
-  //     return 'Password must be at least 6 characters';
-  //   }
-  //   return null;
-  // }
-
-  // // Helper function to confirm password match
-  // String? _validateConfirmPassword(String password, String confirmPassword) {
-  //   if (confirmPassword.isEmpty) {
-  //     return 'Please confirm your password';
-  //   } else if (password != confirmPassword) {
-  //     return 'Passwords do not match';
-  //   }
-  //   return null;
-  // }
-
-  // String? _passwordError;
-  // String? _emailError;
-  // String? _confirmPasswordError;
-  // // void _submitForm() {
-  // //   setState(() {
-  // //     // Manually validate the password when the user submits the form
-  // //     _passwordError = _validatePassword(_passwordController.text);
-  // //     _emailError = _validatePassword(_passwordController.text);
-  // //     _confirmPasswordError = _validatePassword(_passwordController.text);
-  // //   });
-  // // }
-  // void _submitForm() {
-  //       final authProvider = Provider.of<FirebaseAuthService>(context,listen: false);
-
-  //   setState(() {
-  //     // Manually validate the fields
-  //     _emailError = _validateEmail(_emailController.text);
-  //     _passwordError = _validatePassword(_passwordController.text);
-  //     _confirmPasswordError = _validateConfirmPassword(
-  //         _passwordController.text, _confirmPasswordController.text);
-
-  //     // If all fields are valid, show SnackBar
-  //     if (_emailError == null &&
-  //         _passwordError == null &&
-  //         _confirmPasswordError == null) {
-  //       authProvider.createUser(_emailController.text, _passwordController.text,context);
-
-  //       // print(_emailController.text);
-  //       // print(_passwordController.text);
-  //       // print(_confirmPasswordController.text);
-  //       // Navigator.push(
-  //       //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
-  //     }
-  //   });
-  // }
-
-  // Function to submit the form after validation
-  // void _submitForm() {
-  //   setState(() {
-  //     if (_formKey.currentState!.validate()) {
-  //       // _passwordError = null;
-  //       ScaffoldMessenger.of(context)
-  //           .showSnackBar(SnackBar(content: Text('Signup Successful')));
-  //     } else {
-  //     _passwordError = _validatePassword(_passwordController.text);
-  //           _emailError = _validatePassword(_passwordController.text);
-  //           _confirmPasswordError = _validatePassword(_passwordController.text);
-  //     }
-  //   });
-  // }
-  //   // if (_formKey.currentState!.validate()) {
-  //   //   // All validations passed
-  //   //   ScaffoldMessenger.of(context).showSnackBar(
-  //   //     SnackBar(content: Text('Signup Successful')),
-  //   //   );
-  //   //   // You can perform further actions, like calling an API here.
-  //   // }
-  // }
 
   @override
   Widget build(BuildContext context) {
     final validationProvider = Provider.of<ValidationProvider>(context);
 
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      backgroundColor: Color.fromARGB(255, 36, 36, 36),
+      backgroundColor: const Color.fromARGB(255, 36, 36, 36),
       body: SingleChildScrollView(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Stack(
             fit:
-                StackFit.expand, // This makes the image cover the entire screen
+                StackFit.expand, 
             children: [
               Image.asset(
-                'assets/images/login-background.png', // Replace with your image path
+                'assets/images/login-background.png', 
                 fit: BoxFit
-                    .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                    .cover, 
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -160,7 +40,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
@@ -204,10 +83,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   borderRadius: BorderRadius.circular(30),
                                   color: Colors.white),
                               child: TextFormField(
-                                // validator: (value) {
-                                //   final error = _validateEmail(value);
-                                //   return null; // Always return null here
-                                // },
+                                
                                 controller: validationProvider.emailController,
                                 decoration: const InputDecoration(
                                     border: InputBorder
@@ -321,10 +197,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: TextFormField(
                                 controller: validationProvider.confirmPasswordController,
                                 obscureText: true,
-                                // validator: (value) {
-                                //   final error = _validateConfirmPassword(value);
-                                //   return null; // Always return null here
-                                // },
+                              
                                 decoration: const InputDecoration(
                                     border: InputBorder
                                         .none, // Removes the bottom line
@@ -381,8 +254,6 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         ),
       ),
-
-//
     );
   }
 }

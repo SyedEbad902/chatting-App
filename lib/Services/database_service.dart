@@ -1,6 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:chatapp/Models/message_model.dart';
 import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/main.dart';
@@ -9,11 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class DatabaseServiceProvider extends ChangeNotifier {
-  // Map<String, dynamic>? userProfileMap = {};
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final authProvider = getIt<FirebaseAuthService>();
 
-  // Get the current user's UID
+  // Get all user's prfile
   Stream<QuerySnapshot<Map<String, dynamic>>> getUserProfiles() {
     final String currentUserUid = authProvider.credential.currentUser!.uid;
     return firestore
@@ -22,13 +22,13 @@ class DatabaseServiceProvider extends ChangeNotifier {
             isNotEqualTo: currentUserUid) // Exclude the current user's profile
         .snapshots();
   }
-
+// check if chat already exist
   Future<bool> checkChatExist(String uid1, String uid2) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
     final result = await firestore.collection("chats").doc(chatId).get();
     return result.exists;
   }
-
+//create new chat
   Future<void> createNewChat(
       {required String uid1, required String uid2}) async {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
@@ -50,23 +50,18 @@ class DatabaseServiceProvider extends ChangeNotifier {
     });
   }
 
+//get current time from api
   Future<String?> getCurrentTimeFromInternet() async {
     try {
-      // World Time API URL (you can change the timezone)
       final url = Uri.parse("http://worldtimeapi.org/api/ip");
 
-      // Send HTTP GET request
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        // Parse the JSON response
         final data = jsonDecode(response.body);
 
-        // Get the datetime string
         String dateTimeStr = data['datetime'];
-        // print(dateTimeStr);
-        // Parse the string to DateTime
-        DateTime currentTime = DateTime.parse(dateTimeStr);
+        DateTime.parse(dateTimeStr);
 
         return dateTimeStr;
       } else {
@@ -78,13 +73,14 @@ class DatabaseServiceProvider extends ChangeNotifier {
       return null;
     }
   }
-
+//get all old chats b/w the users
   Stream<DocumentSnapshot<Map>> getChat(String uid1, String uid2) {
     String chatId = generateChatId(uid1: uid1, uid2: uid2);
     return firestore.collection("chats").doc(chatId).snapshots()
         as Stream<DocumentSnapshot<Map>>;
   }
 
+// generate unique if for two users chat
   String generateChatId({required String uid1, required String uid2}) {
     List uids = [uid1, uid2];
     uids.sort();

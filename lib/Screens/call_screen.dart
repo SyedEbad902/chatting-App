@@ -15,23 +15,19 @@ class CallScreen extends StatefulWidget {
 class _CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
-    // final databaseProvider = Provider.of<DatabaseServiceProvider>(context);
-    // final authProvider = Provider.of<FirebaseAuthService>(context);
     final callProvider = Provider.of<CallingService>(context);
     final authProvider = getIt<FirebaseAuthService>();
-
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
-              // decoration: BoxDecoration(border: Border(bottom: Bo)),
               width: double.infinity,
               child: Stack(fit: StackFit.expand, children: [
                 Image.asset(
-                  'assets/images/login-background.png', // Replace with your image path
+                  'assets/images/login-background.png',
                   fit: BoxFit
-                      .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                      .cover,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -71,7 +67,7 @@ class _CallScreenState extends State<CallScreen> {
                       padding: const EdgeInsets.all(5.0),
                       child: FutureBuilder(
                           future: callProvider
-                              .getAllCalls(), // Fetch both outgoing and incoming calls
+                              .getAllCalls(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -84,7 +80,6 @@ class _CallScreenState extends State<CallScreen> {
                                   child: Text("No call logs found"));
                             }
 
-                            // List<Map<String, dynamic>> calls = snapshot.data!;
 
                             return ListView.separated(
                               separatorBuilder: (context, index) {
@@ -110,7 +105,7 @@ class _CallScreenState extends State<CallScreen> {
                                 return ListTile(
                                   leading: CircleAvatar(
                                       backgroundColor:
-                                          Color.fromARGB(255, 36, 36, 36),
+                                          const Color.fromARGB(255, 36, 36, 36),
                                       radius: 28,
                                       child: call['isVideoCall']
                                           ? SvgPicture.asset(
@@ -119,7 +114,7 @@ class _CallScreenState extends State<CallScreen> {
                                               width: 28,
                                               color: Colors.white,
                                             )
-                                          : Icon(
+                                          : const Icon(
                                               Icons.call,
                                               size: 27,
                                               color: Colors.white,
@@ -141,19 +136,19 @@ class _CallScreenState extends State<CallScreen> {
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w400),
-                                  ),
-                                );
-
-                                //  ListTile(
-                                //   title: Text(text),
-                                //   subtitle: Text(call["timestamp"]),
-                                //   trailing: Text("${call['isVideoCall']}"),
-                                // );
-                              },
-                            );
-                          }),
-                    ));
-              })
-        ]));
+                                ),
+                              );
+                               
+                            },
+                          );
+                        }
+                      ),
+                  ),
+                );
+              }
+            )
+        ]
+      )
+    );
   }
 }

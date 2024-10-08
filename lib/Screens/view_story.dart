@@ -43,19 +43,10 @@ class _StoryPageState extends State<StoryPage> {
           url: url,
           imageFit: BoxFit.contain,
           duration: const Duration(seconds: 5),
-          // caption: "Story from ${widget.userName}",
         );
       }).toList();
     });
-    //   // setState(() {
-    //   //   _storyItems = widget.imageUrls
-    //   //       .map((url) => StoryItem.pageImage(
-    //   //             url: url,
-    //   //             controller: _storyController,
-    //   //             // caption: "Story from ${widget.userName}",
-    //   //           ))
-    //   //       .toList();
-    //   // });
+   
   }
 
   @override
@@ -89,9 +80,7 @@ class _StoryPageState extends State<StoryPage> {
           ),
         ),
       ),
-      // appBar: AppBar(
-      //   title: Text("${widget.userName}'s Stories"),
-      // ),
+     
       body: _storyItems.isNotEmpty
           ? StoryView(
               storyItems: _storyItems,
@@ -103,7 +92,7 @@ class _StoryPageState extends State<StoryPage> {
               },
               onStoryShow: (storyItem, index) {
                 if (!isImageLoaded) {
-                  _storyController.pause(); // Pause until image is loaded
+                  _storyController.pause(); 
                 }
               },
               onVerticalSwipeComplete: (direction) {

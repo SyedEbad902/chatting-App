@@ -2,7 +2,6 @@ import 'package:chatapp/Screens/splash_screen.dart';
 import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/calling_service.dart';
 import 'package:chatapp/Services/database_service.dart';
-import 'package:chatapp/Services/getuser_service.dart';
 import 'package:chatapp/Services/image_picker_service.dart';
 import 'package:chatapp/Services/toast_service.dart';
 import 'package:chatapp/Services/validation_service.dart';
@@ -40,10 +39,6 @@ void setupLocator() {
   getIt.registerLazySingleton<ToastService>(() => ToastService());
 }
 
-// Future<bool> whereToGo() async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   return prefs.getBool('isLoggedIn') ?? false;
-// }
 
 class MyApp extends StatefulWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -68,7 +63,6 @@ class _MyAppState extends State<MyApp> {
           ChangeNotifierProvider(create: (_) => DatabaseServiceProvider()),
           ChangeNotifierProvider(create: (_) => CallingService()),
           ChangeNotifierProvider(create: (_) => ToastService()),
-          // ChangeNotifierProvider(create: (_) => GetuserService()),
         ],
         child: MaterialApp(
           navigatorKey: widget.navigatorKey,

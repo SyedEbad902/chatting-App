@@ -17,7 +17,6 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  // Map newUser = {};
   Map<String, dynamic>? userProfileMap = {};
   bool loadData = false;
   Future<Map<String, dynamic>?> getCurrentUserProfile() async {
@@ -26,32 +25,28 @@ class _MessageScreenState extends State<MessageScreen> {
     });
     final credential = FirebaseAuth.instance;
 
-    // Get the current user's UID from Firebase Authentication
     final String currentUserUid = credential.currentUser!.uid;
 
-    // Fetch the current user's profile document from Firestore
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
         .collection('users')
         .doc(
-            currentUserUid) // Retrieve the document where the UID matches the current user's UID
+            currentUserUid) 
         .get();
 
-    // Check if the document exists and return the profile data
     if (snapshot.exists) {
       userProfileMap = snapshot.data();
       setState(() {
         loadData = false;
       });
-      return userProfileMap; // This returns the document data as a Map<String, dynamic>
+      return userProfileMap; 
     } else {
-      return null; // Return null if the document doesn't exist
+      return null; 
     }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     userProfileMap?.clear();
     getCurrentUserProfile();
@@ -62,17 +57,16 @@ class _MessageScreenState extends State<MessageScreen> {
     final databaseProvider = Provider.of<DatabaseServiceProvider>(context);
     final authProvider = Provider.of<FirebaseAuthService>(context);
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: Stack(children: [
           SizedBox(
               height: MediaQuery.of(context).size.height * 1,
-              // decoration: BoxDecoration(border: Border(bottom: Bo)),
               width: double.infinity,
               child: Stack(fit: StackFit.expand, children: [
                 Image.asset(
-                  'assets/images/login-background.png', // Replace with your image path
+                  'assets/images/login-background.png', 
                   fit: BoxFit
-                      .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                      .cover,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -88,7 +82,7 @@ class _MessageScreenState extends State<MessageScreen> {
                             ? "Welcome..."
                             : "Welcome ${userProfileMap!["imageName"]}",
                         style: const TextStyle(
-                            fontSize: 30,
+                            fontSize: 25,
                             fontWeight: FontWeight.w700,
                             color: Colors.white),
                       ),
@@ -122,7 +116,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: loadData
-                          ? Center(
+                          ? const Center(
                               child: CircularProgressIndicator(),
                             )
                           : StreamBuilder(
@@ -144,7 +138,6 @@ class _MessageScreenState extends State<MessageScreen> {
                                       child: Text('No profiles found.'));
                                 }
 
-                                // Get the list of profiles excluding the current user
                                 List<
                                         QueryDocumentSnapshot<
                                             Map<String, dynamic>>>

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chatapp/Services/auth_service.dart';
 import 'package:chatapp/Services/image_picker_service.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -20,20 +21,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImagePickerService>(context);
+    final authProvider = Provider.of<FirebaseAuthService>(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: SizedBox(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: Stack(
                 fit: StackFit
-                    .expand, // This makes the image cover the entire screen
+                    .expand, 
                 children: [
                   Image.asset(
-                    'assets/images/login-background.png', // Replace with your image path
+                    'assets/images/login-background.png',
                     fit: BoxFit
-                        .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                        .cover, 
                   ),
                   Padding(
                       padding: const EdgeInsets.only(
@@ -57,16 +59,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
-                                  // CircularProgressIndicator()
                                   Lottie.asset("assets/images/new-loader2.json",
                                       height: 50, width: 60),
                                 ])
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
@@ -96,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       }
                                     },
                                     child: Container(
-                                      padding: EdgeInsets.all(5),
+                                      padding: const EdgeInsets.all(5),
                                       width: 170, // Set the size of the avatar
                                       height: 170,
                                       decoration: BoxDecoration(
@@ -179,12 +179,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               context);
                                         }
                                         nameController.clear();
+      
+                                       await authProvider. getCurrentUserProfile();
+                                        authProvider. onUserLogin();
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
-                                              30), // Adjust radius as needed
+                                              30),
                                         ),
                                       ),
                                       child: const Text(
@@ -194,7 +197,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ),
-                                ]))
-                ])));
+                                ]
+                              )
+                            )
+                ]
+              )
+            )
+          );
   }
 }

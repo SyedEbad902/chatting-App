@@ -59,36 +59,30 @@ class _UpdateProfileState extends State<UpdateProfile> {
   }
 
   TextEditingController nameController = TextEditingController();
-  // void initState() {
-  //   super.initState();
-  //   Map<String,dynamic> image = Future.microtask(() {
-  //     Provider.of<FirebaseAuthService>(context, listen: false).userProfileMap;
-  //   });
-  //   selectedImage = image!["imageUrl"];
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
     final imageProvider = Provider.of<ImagePickerService>(context);
-    final authProvider = Provider.of<FirebaseAuthService>(context);
+    Provider.of<FirebaseAuthService>(context);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Color.fromARGB(255, 36, 36, 36),
+        backgroundColor: const Color.fromARGB(255, 36, 36, 36),
         body: loadData
             ? SizedBox(
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: Stack(
                     fit: StackFit
-                        .expand, // This makes the image cover the entire screen
+                        .expand, 
                     children: [
                       Image.asset(
-                        'assets/images/login-background.png', // Replace with your image path
+                        'assets/images/login-background.png', 
                         fit: BoxFit
-                            .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                            .cover,
                       ),
-                      Center(
+                      const Center(
                         child: CircularProgressIndicator(),
                       ),
                     ]))
@@ -97,12 +91,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 width: MediaQuery.of(context).size.width,
                 child: Stack(
                     fit: StackFit
-                        .expand, // This makes the image cover the entire screen
+                        .expand,
                     children: [
                       Image.asset(
-                        'assets/images/login-background.png', // Replace with your image path
+                        'assets/images/login-background.png',
                         fit: BoxFit
-                            .cover, // This makes the image fill the screen while maintaining its aspect ratio
+                            .cover, 
                       ),
                       Padding(
                           padding: const EdgeInsets.only(
@@ -127,14 +121,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
-                                      CircularProgressIndicator()
+                                      const CircularProgressIndicator()
                                     ])
                               : Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                       SizedBox(
                                         height:
@@ -165,7 +158,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                           }
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.all(5),
+                                          padding: const EdgeInsets.all(5),
                                           width:
                                               170, // Set the size of the avatar
                                           height: 170,
@@ -229,7 +222,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                                                   .none, // Removes the bottom line
                                               hintText:
                                                   "${userProfileMap!["imageName"]}",
-                                              hintStyle: TextStyle(
+                                              hintStyle: const TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 16)),
                                         ),
